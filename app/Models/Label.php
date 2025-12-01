@@ -15,20 +15,20 @@ class Label extends Model
         'board_id'
     ];
 
-    public function Cards(): HasMany {
+    public function cards(): HasMany {
         return $this->hasMany(Card::class);
     }
 
-    public function Card_Templates(): HasMany {
+    public function cardTemplates(): HasMany {
         return $this->hasMany(Card_Template::class);
     }
 
-    public function Board(): BelongsTo {
+    public function board(): BelongsTo {
         return $this->belongsTo(Board::class);
     }
 
     //logs
-    public function Logs(): MorphMany {
+    public function logs(): MorphMany {
         return $this->morphMany(Log::class, 'loggable');
     }
 }

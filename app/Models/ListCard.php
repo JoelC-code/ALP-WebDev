@@ -14,12 +14,12 @@ class ListCard extends Model
         'board_id',
     ];
 
-    public function Cards(): HasMany {
+    public function cards(): HasMany {
         return $this->hasMany(Card::class);
     }
 
     //logs
-    public function Logs(): MorphMany {
+    public function logs(): MorphMany {
         return $this->morphMany(Log::class, 'loggable');
     }
 }

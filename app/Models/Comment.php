@@ -14,11 +14,11 @@ class Comment extends Model
         'date'
     ];
 
-    public function Cards(): HasMany {
+    public function cards(): HasMany {
         return $this->hasMany(Card::class);
     }
 
-    public function Users(): BelongsTo {
+    public function users(): BelongsTo {
         return $this->belongsTo(User::class);
     }
 }
