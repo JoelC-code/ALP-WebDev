@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -31,8 +32,8 @@ class Card_Template extends Model
         return $this->hasMany(Label::class);
     }
 
-    public function board(): HasMany {
-        return $this->hasMany(Board::class);
+    public function board(): BelongsTo {
+        return $this->BelongsTo(Board::class);
     }
 
     //logs
