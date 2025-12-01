@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
@@ -15,12 +16,26 @@ class Custom_Fields extends Model
         'board_id'
     ];
 
-    public function Cards(): HasMany {
-        return $this->hasMany(Card::class);
+    //Pivot Cards <-> Custom Fields
+    public function Cards(): BelongsToMany {
+        return $this->belongsToMany(Card::class)
+                    ->using(FieldsCards::class)
+                    ->withPivot('value');
     }
 
-    public function Card_Templates(): HasMany {
-        return $this->hasMany(Card_Template::class);
+    public function fieldCards(): HasMany {
+        return $this->hasMany(FieldsCards::class);
+    }
+
+    //Pivot CardTemplate <-> Custom Fields
+    public function Card_Templates(): BelongsToMany {
+        return $this->BelongsToMany(Card_Template::class)
+                    ->using(FieldTemplates::class)
+                    ->withPivot('value');
+    }
+
+    public function fieldTemplate(): HasMany {
+        return $this->hasMany(FieldTemplates::class);
     }
 
     public function Board(): HasMany {

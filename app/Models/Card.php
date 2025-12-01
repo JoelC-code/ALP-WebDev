@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
@@ -25,8 +26,14 @@ class Card extends Model
         return $this->hasMany(Label::class);
     }
 
-    public function customFields(): HasMany {
-        return $this->hasMany(Custom_Fields::class);
+    public function customFields(): BelongsToMany {
+        return $this->belongsToMany(Custom_Fields::class)
+                    ->using(FieldsCards::class)
+                    ->withPivot('value');
+    }
+
+    public function fieldsCard(): HasMany {
+        return $this->hasMany(FieldsCards::class);
     }
 
     public function comments(): HasMany {
