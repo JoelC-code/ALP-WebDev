@@ -38,12 +38,12 @@ class Custom_Fields extends Model
         return $this->hasMany(FieldTemplates::class);
     }
 
-    public function Board(): HasMany {
+    public function board(): HasMany {
         return $this->hasMany(Board::class);
     }
 
     //logs
-    public function Logs(): MorphMany {
+    public function logs(): MorphMany {
         return $this->morphMany(Log::class, 'loggable');
     }
 }
