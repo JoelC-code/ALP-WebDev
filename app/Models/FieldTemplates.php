@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class FieldTemplates extends Model
 {
-        protected $fillable = [
-        'custom_fields_id',
+    protected $fillable = [
+        'custom_field_id',
         'card_id',
         'value'
     ];

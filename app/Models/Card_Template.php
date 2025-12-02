@@ -15,6 +15,7 @@ class Card_Template extends Model
         'image',
         'description',
         'dates',
+        'board_id',
     ];
 
     // CustomFields <-> Card Template

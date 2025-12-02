@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class FieldsCards extends Model
 {
     protected $fillable = [
-        'custom_fields_id',
+        'custom_field_id',
         'card_id',
         'value'
     ];
