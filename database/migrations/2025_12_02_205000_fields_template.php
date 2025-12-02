@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('list_card', function (Blueprint $table) {
-            $table->id('list_id');
-            $table->string('list_name');
-            $table->float('position');
-            $table->foreignId('board_id')->constrained()->onDelete('Cascade');
-            $table->timestamps();
+        Schema::create('fields_templates', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('custom_field_id')->constrained()->onDelete('Cascade');
+            $table->foreignId('card_template_id')->constrained()->onDelete('Cascade');
+            $table->string('value');
         });
     }
 
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('list_card');
+        Schema::dropIfExists('fields_templates');
     }
 };

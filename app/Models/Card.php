@@ -20,13 +20,13 @@ class Card extends Model
 
     //Pivot Card <-> Custom Fields
     public function customFields(): BelongsToMany {
-        return $this->belongsToMany(Custom_Fields::class, 'field_card')
-                    ->using(FieldsCards::class)
+        return $this->belongsToMany(CustomField::class)
+                    ->using(FieldCard::class)
                     ->withPivot('value');
     }
 
     public function fieldsCard(): HasMany {
-        return $this->hasMany(FieldsCards::class);
+        return $this->hasMany(FieldCard::class);
     }
 
     public function users(): HasMany {

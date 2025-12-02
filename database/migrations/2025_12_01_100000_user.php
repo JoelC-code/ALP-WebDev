@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('member_board', function (Blueprint $table) {
-            $table->id('member_board_id');
-            $table->foreignId('user_id')->constrained()->onDelete('Cascade');
-            $table->foreignId('board_id')->constrained()->onDelete('Cascade');
-            $table->string('role');
-            $table->boolean('isGuest');
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('username');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->string('invite_id');
+            $table->rememberToken();
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('member_board');
+        Schema::dropIfExists('users');
     }
 };

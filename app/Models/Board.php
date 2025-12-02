@@ -32,11 +32,11 @@ class Board extends Model
     }
 
     public function customFields(): HasMany {
-        return $this->hasMany(Custom_Fields::class);
+        return $this->hasMany(CustomField::class);
     }
 
     public function cardTemplates(): HasMany {
-        return $this->hasMany(Card_Template::class);
+        return $this->hasMany(CardTemplate::class);
     }
 
     //logs

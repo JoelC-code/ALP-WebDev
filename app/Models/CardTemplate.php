@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-class Card_Template extends Model
+class CardTemplate extends Model
 {
     protected $fillable = [
         'card_title',
@@ -20,13 +20,13 @@ class Card_Template extends Model
 
     // CustomFields <-> Card Template
     public function customFields(): BelongsToMany {
-        return $this->belongsToMany(Custom_Fields::class, 'field_templates')
-                    ->using(FieldTemplates::class)
+        return $this->belongsToMany(CustomField::class,)
+                    ->using(FieldTemplate::class)
                     ->withPivot('value');
     }
 
     public function fieldTemplates(): HasMany {
-        return $this->hasMany(FieldTemplates::class);
+        return $this->hasMany(FieldTemplate::class);
     }
 
     public function labels(): HasMany {

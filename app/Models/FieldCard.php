@@ -7,9 +7,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class FieldsCards extends Model
+class FieldCard extends Model
 {
-    protected $table = 'field_card';
     
     protected $fillable = [
         'custom_field_id',
@@ -18,7 +17,7 @@ class FieldsCards extends Model
     ];
 
     public function customFields(): BelongsTo {
-        return $this->belongsTo(Custom_Fields::class);
+        return $this->belongsTo(CustomField::class);
     }
 
     public function cards(): BelongsTo  {

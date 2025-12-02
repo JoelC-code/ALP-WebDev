@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comment_card', function (Blueprint $table) {
-            $table->id('comment_card_id');
-            $table->foreignId('comment_id')->constrained()->onDelete('Cascade');
-            $table->foreignId('card_id')->constrained()->onDelete('Cascade');
+        Schema::create('card_templates', function (Blueprint $table) {
+            $table->id();
+            $table->string('image')->nullable();
+            $table->string('description')->nullable();
+            $table->date('dates')->nullable();
+            $table->foreignId('board_id')->constrained()->onDelete('Cascade');
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comment_card');
+        Schema::dropIfExists('card_templates');
     }
 };

@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('board', function (Blueprint $table) {
-            $table->id('board_id');
-            $table->string('board_name');
+        Schema::create('custom_fields', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->string('type');
+            $table->foreignId('board_id')->constrained()->onDelete('Cascade');
             $table->timestamps();
         });
     }
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('board');
+        Schema::dropIfExists('custom_fields');
     }
 };
