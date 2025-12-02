@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->date('dates')->nullable();
             $table->foreignId('board_id')->constrained()->onDelete('Cascade');
+            $table->timestamps();
         });
     }
 

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('comment_card_id');
             $table->foreignId('comment_id')->constrained()->onDelete('Cascade');
             $table->foreignId('card_id')->constrained()->onDelete('Cascade');
+            $table->timestamps();
         });
     }
 

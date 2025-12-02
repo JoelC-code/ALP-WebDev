@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('list_name');
             $table->float('position');
             $table->foreignId('board_id')->constrained()->onDelete('Cascade');
+            $table->timestamps();
         });
     }
 

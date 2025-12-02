@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('comment_id');
             $table->date('dates');
             $table->string('comment_content');
+            $table->timestamps();
         });
     }
 

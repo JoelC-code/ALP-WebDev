@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('dates')->nullable();
             $table->float('position');
             $table->foreignId('list_id')->constrained()->onDelete('Cascade');
+            $table->timestamps();
         });
     }
 

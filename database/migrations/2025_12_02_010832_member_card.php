@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('member_card_id');
             $table->foreignId('user_id')->constrained()->onDelete('Cascade');
             $table->foreignId('card_id')->constrained()->onDelete('Cascade');
+            $table->timestamps();
         });
     }
 
