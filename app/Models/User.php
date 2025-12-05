@@ -26,6 +26,16 @@ class User extends Authenticatable
         'password',
     ];
 
+    protected static function boot() {
+        parent::boot();
+        static::creating(function ($user) {
+            do {
+                $invite = str_pad(random_int(0, 9999999), 7, '0', STR_PAD_LEFT);
+            } while (User::where('invite_id', $invite)->exists());
+            $user->invite_id = $invite;
+        });
+    }
+
     //Pivot User <-> Board
     public function memberBoards(): HasMany {
         return $this->hasMany(MemberBoard::class);
@@ -43,5 +53,9 @@ class User extends Authenticatable
 
     public function comments(): HasMany {
         return $this->hasMany(Comment::class);
+    }
+
+    public function logs(): HasMany {
+        return $this->hasMany(Log::class);
     }
 }

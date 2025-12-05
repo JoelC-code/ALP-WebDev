@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('username');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('invite_id');
+            $table->string('invite_id')->unique();
             $table->rememberToken();
             $table->timestamps();
         });
