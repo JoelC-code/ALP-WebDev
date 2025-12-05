@@ -3,8 +3,8 @@
         <img src="/images/StackBoard.png" width="50" height="50" class="me-2" style="border-radius: 10px"/>
         <h4 class="fw-bold mb-0 mt-0" style="color: #1800AD">StackBoard</h4>
     </a>
-    <div class="py-2 gap-2 align-items-center d-none z-2 justify-content-center">
-        <div class="search-container">
+    <div class="py-2 gap-2 align-items-center d-flex z-2 justify-content-center">
+        <div class="search-container d-none d-md-block">
             <input type="text" placeholder="Search A Board" name="board-search" class="form-control">
         </div>
         <button class="search-btn btn btn-primary">Search</button>
