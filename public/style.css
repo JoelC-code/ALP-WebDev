@@ -14,3 +14,7 @@ body {
 .bg-color-main-one {
   background-color: #ffffff;
 }
+
+body {
+  padding-top: 100px;
+}

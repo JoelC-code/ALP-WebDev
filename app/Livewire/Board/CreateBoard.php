@@ -22,7 +22,8 @@ class CreateBoard extends Component
         ]);
 
         $board->users()->attach(Auth::id(), [
-            'isGuest' => false
+            'role' => 'admin',
+            'isGuest' => false,
         ]);
 
         $this->reset('board_name');

@@ -27,7 +27,8 @@ class User extends Authenticatable
     ];
 
     //Invite ID akan dibuat saat user dibuat
-    protected static function booted() {
+    protected static function booted()
+    {
         parent::boot();
         static::creating(function ($user) {
             logger('EVENT RUNNING: creating user');
@@ -40,25 +41,26 @@ class User extends Authenticatable
     }
 
     //Pivot User <-> Board
-    public function memberBoards(): HasMany {
-        return $this->hasMany(MemberBoard::class);
+    public function memberBoards()
+    {
+        return $this->belongsToMany(Board::class)
+            ->using(MemberBoard::class)
+            ->withPivot('role', 'isGuest')
+            ->withTimestamps();
     }
 
-    public function boards(): BelongsToMany {
-        return $this->belongsToMany(Board::class, 'member_board')
-                    ->using(MemberBoard::class)
-                    ->withPivot('role', 'isGuest');
-    }
-
-    public function cards(): HasMany {
+    public function cards(): HasMany
+    {
         return $this->hasMany(Card::class);
     }
 
-    public function comments(): HasMany {
+    public function comments(): HasMany
+    {
         return $this->hasMany(Comment::class);
     }
 
-    public function logs(): HasMany {
+    public function logs(): HasMany
+    {
         return $this->hasMany(Log::class);
     }
 }

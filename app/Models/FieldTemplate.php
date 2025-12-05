@@ -4,10 +4,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class FieldTemplate extends Model
+class FieldTemplate extends Pivot
 {
     protected $fillable = [
         'custom_field_id',

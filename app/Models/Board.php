@@ -17,30 +17,32 @@ class Board extends Model
     ];
 
     //Pivot Board <-> Users
-    public function memberBoards(): HasMany {
-        return $this->hasMany(MemberBoard::class);
+    public function members()
+    {
+        return $this->belongsToMany(User::class)
+            ->using(MemberBoard::class)
+            ->withPivot('role', 'isGuest')
+            ->withTimestamps();
     }
 
-    public function users(): BelongsToMany {
-        return $this->belongsToMany(User::class, 'member_board')
-                    ->using(MemberBoard::class)
-                    ->withPivot('role', 'isGuest');
-    }
-
-    public function labels(): HasMany {
+    public function labels(): HasMany
+    {
         return $this->hasMany(Label::class);
     }
 
-    public function customFields(): HasMany {
+    public function customFields(): HasMany
+    {
         return $this->hasMany(CustomField::class);
     }
 
-    public function cardTemplates(): HasMany {
+    public function cardTemplates(): HasMany
+    {
         return $this->hasMany(CardTemplate::class);
     }
 
     //logs
-    public function logs(): MorphMany {
+    public function logs(): MorphMany
+    {
         return $this->morphMany(Log::class, 'loggable');
     }
 }
