@@ -17,7 +17,7 @@ return new class extends Migration
             $table->date('dates');
             $table->unsignedBigInteger('loggable_id');
             $table->string('loggable_name');
-            $table->foreign('user_id')->constrained()->onDelete('Cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('Cascade');
             $table->timestamps();
         });
     }
