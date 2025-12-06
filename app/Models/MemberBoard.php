@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class MemberBoard extends Pivot
 {
+    protected $table = 'member_boards';
+
     protected $fillable = [
         'user_id',
         'board_id',

@@ -10,7 +10,7 @@ class CreateBoard extends Component
 {
     public $board_name;
 
-    public function create()
+    public function createBoard()
     {
         //Validate incoming data
         $this->validate([
@@ -21,7 +21,7 @@ class CreateBoard extends Component
             'board_name' => $this->board_name
         ]);
 
-        $board->users()->attach(Auth::id(), [
+        $board->members()->attach(Auth::id(), [
             'role' => 'admin',
             'isGuest' => false,
         ]);
@@ -29,6 +29,8 @@ class CreateBoard extends Component
         $this->reset('board_name');
 
         $this->dispatch('board_created');
+
+        $this->redirect('/dashboard');
     }
 
     //In livewire library, render is used to render the data

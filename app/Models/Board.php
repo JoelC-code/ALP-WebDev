@@ -19,7 +19,7 @@ class Board extends Model
     //Pivot Board <-> Users
     public function members()
     {
-        return $this->belongsToMany(User::class)
+        return $this->belongsToMany(User::class, 'member_boards')
             ->using(MemberBoard::class)
             ->withPivot('role', 'isGuest')
             ->withTimestamps();

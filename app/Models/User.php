@@ -6,7 +6,6 @@ namespace App\Models;
 
 use Dom\Comment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -43,7 +42,7 @@ class User extends Authenticatable
     //Pivot User <-> Board
     public function memberBoards()
     {
-        return $this->belongsToMany(Board::class)
+        return $this->belongsToMany(Board::class, 'member_boards')
             ->using(MemberBoard::class)
             ->withPivot('role', 'isGuest')
             ->withTimestamps();

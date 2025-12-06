@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -20,10 +21,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/board/create', \App\Livewire\Board\CreateBoard::class);
-    // Route::get('/board/{board}', \App\Livewire\Board\ViewBoard::class);
-    // Route::delete('/board/{board}', \App\Livewire\Board\DeleteBoard::class);
-    // Route::get('/dashboard', \App\Livewire\Board\ListBoard::class);
+    Route::get('/board-create', [DashboardController::class, 'directCreate'])->name('board.create');
 });
 
 //! FAST LOGIN FOR CHECKS
