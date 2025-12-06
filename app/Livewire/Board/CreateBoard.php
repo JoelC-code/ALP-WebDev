@@ -28,14 +28,14 @@ class CreateBoard extends Component
 
         $this->reset('board_name');
 
-        $this->dispatch('board_created');
-
         $this->redirect('/dashboard');
     }
 
     //In livewire library, render is used to render the data
     public function render()
     {
-        return view('livewire.board.create-board');
+        return view('livewire.board.create-board', [
+            'boards' => Auth::user()->boards
+        ]);
     }
 }
