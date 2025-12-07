@@ -1,0 +1,39 @@
+html {
+    font-family: 'Open Sans', sans-serif;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
+}
+
+body {
+  padding-top: 100px;
+}
+
+.board-layout {
+  display: flex;
+  height: calc(100vh - 100px);
+  overflow: hidden;
+}
+
+#sidebar {
+  width: 260px;
+  position: fixed;
+  top: 85px;
+  left: 0;
+  bottom: 0;
+  overflow-y: auto;
+  flex-grow: 0;
+}
+
+#boardContent {
+  margin-left: 260px;
+  overflow-y: auto;
+  height: calc(100vh - 100px);
+  flex-grow: 1;
+}
