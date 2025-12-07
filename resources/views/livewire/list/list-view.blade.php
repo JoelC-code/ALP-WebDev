@@ -8,12 +8,9 @@
                         <livewire:boardlist.list-delete
                             :board-id="$this->board->id"
                             :list-id="$li->id"
-                            :key="$li->id" />
+                            :key="'cardlist-' . $li->id" />
                     </div>
-                    <div class="card mb-2 shadow-sm">
-                        <div class="card-body p-2">Sample Task Card</div>
-                    </div>
-                    <button class="btn btn-sm btn-outline-primary w-100 mt-2">Add Card</button>
+                    <livewire:card.card-list :list="$li" :key="$li->id" />
                 </div>
             </div>
             @endforeach

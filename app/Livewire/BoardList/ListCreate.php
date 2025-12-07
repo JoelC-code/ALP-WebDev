@@ -45,7 +45,7 @@ class ListCreate extends Component
         $this->dispatch('hideCreateFormFromParent');
     }
 
-    public function cancelCreate()
+    public function cancelCreateList()
     {
         // Just tell parent to close the form
         $this->dispatch('hide-create-form');
