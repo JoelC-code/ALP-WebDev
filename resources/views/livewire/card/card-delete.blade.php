@@ -1,3 +1,3 @@
-<div>
-    {{-- Close your eyes. Count to one. That is how long forever feels. --}}
-</div>
+<button wire:click="deleteList">
+    <span class="material-symbols-rounded font-logo">delete</span>
+</button>
