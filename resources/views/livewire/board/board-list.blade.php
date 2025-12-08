@@ -1,4 +1,4 @@
-<div class="container workspace-section justify-content-start" wire:poll.visible.1s="refreshBoards">
+<div class="container workspace-section justify-content-start">
     <h3>Your Workspace</h3>
     <div class="board-cards flex flex-warp gap-2">
 

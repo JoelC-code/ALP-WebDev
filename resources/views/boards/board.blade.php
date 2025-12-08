@@ -19,7 +19,7 @@
 
         {{-- Board --}}
         <main id="boardContent" class="p-4">
-            <livewire:boardlist.list-view :board="$board" wire:poll.1s="refreshLists" />
+            <livewire:boardlist.list-view :board="$board" />
         </main>
     </div>
 

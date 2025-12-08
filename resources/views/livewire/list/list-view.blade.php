@@ -1,4 +1,4 @@
-    <div wire:poll.visible.1s="refreshLists" class="container-fluid board-scroll mt-3">
+    <div class="container-fluid board-scroll mt-3">
         <div class="d-flex gap-3 flex-nowrap">
             @foreach($lists as $li)
             <div class="col-auto list-view">
