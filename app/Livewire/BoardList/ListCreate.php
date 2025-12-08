@@ -43,7 +43,7 @@ class ListCreate extends Component
 
         $this->reset('list_name');
 
-        $this->dispatch('list-created');
+        $this->dispatch('board-update');
 
         $this->dispatch('hideCreateFormFromParent');
     }

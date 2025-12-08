@@ -43,7 +43,7 @@ class CardCreate extends Component
         event(new CardCreateBroadcast($card));
 
         $this->reset('card_title');
-        $this->dispatch('card-created');
+        $this->dispatch('board-update');
         $this->dispatch('hideCreateFormCard');
     }
 

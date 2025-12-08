@@ -29,7 +29,7 @@ class BoardDelete extends Component
 
         event(new BoardDeleteBroadcast($board->id));
 
-        $this->dispatch('board_deleted');
+        $this->dispatch('board-update');
     }
 
     public function render()

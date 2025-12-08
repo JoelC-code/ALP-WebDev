@@ -16,9 +16,7 @@ class CardList extends Component
     public $cards = [];
 
     protected $listeners = [
-        'card-delete' => 'refreshCards',
-        'card-created' => 'refreshCards',
-        'hideCreateFormCard' => 'createCancel'
+        'board-update' => 'refreshCards',
     ];
 
     public function showForm() {

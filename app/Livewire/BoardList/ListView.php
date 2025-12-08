@@ -16,9 +16,8 @@ class ListView extends Component
     //Listeners structure:
     // 'dispatch_sent' -> 'refreshfunction'
     protected $listeners = [
-        'list-created' => 'refreshLists',
+        'board-update' => 'refreshLists',
         'hideCreateFormFromParent' => 'createCancel',
-        'list-deleted' => 'refreshLists'
     ];
 
     

@@ -13,7 +13,7 @@ class BoardList extends Component
     public $boards;
 
     protected $listeners = [
-        'board_deleted' => 'refreshBoards'
+        'board-update' => 'refreshBoards'
     ];
 
     public function mount()
