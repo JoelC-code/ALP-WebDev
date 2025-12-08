@@ -3,6 +3,7 @@
 namespace App\Livewire\Board;
 
 use App\Events\Board\BoardDeleteBroadcast;
+use App\Events\BoardUpdateBroadcast;
 use App\Models\Board;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
@@ -27,7 +28,7 @@ class BoardDelete extends Component
 
         $board->delete();
 
-        event(new BoardDeleteBroadcast($board->id));
+        event(new BoardUpdateBroadcast($board->id, 'board-deleted'));
 
         $this->dispatch('board-update');
     }

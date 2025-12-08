@@ -3,6 +3,7 @@
 namespace App\Livewire\Board;
 
 use App\Events\Board\BoardCreatBroadcast;
+use App\Events\BoardUpdateBroadcast;
 use App\Models\Board;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
@@ -27,7 +28,7 @@ class CreateBoard extends Component
             'isGuest' => false,
         ]);
 
-        event(new BoardCreatBroadcast($board));
+        event(new BoardUpdateBroadcast($board, 'board-created'));
 
         $this->reset('board_name');
 

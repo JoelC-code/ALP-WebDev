@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Card;
 
+use App\Events\BoardUpdateBroadcast;
 use App\Events\Card\CardCreateBroadcast;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -40,7 +41,9 @@ class CardCreate extends Component
             'position' => $position
         ]);
 
-        event(new CardCreateBroadcast($card));
+        event(new BoardUpdateBroadcast($this->board->id, 'card-deleted', [
+            'card' => $card
+        ]));
 
         $this->reset('card_title');
         $this->dispatch('board-update');

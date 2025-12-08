@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Events\Board;
+namespace App\Events;
 
-use App\Models\Board;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -11,15 +10,18 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class BoardCreatBroadcast
+class BoardUpdateBroadcast implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $board;
+    public $boardId;
+    public $action;
+    public $payload;
 
-    public function __construct(Board $board)
-    {
-        $this->board = $board;
+    public function __construct($boardId, $action, $payload = null) {
+        $this->boardId = $boardId;
+        $this->action = $action;
+        $this->payload = $payload;
     }
 
     /**
@@ -29,13 +31,10 @@ class BoardCreatBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('boards');
+        return new Channel('board.' . $this->boardId);
     }
 
-    public function broadcastWith()
-    {
-        return [
-            'board' => $this->board->toArray(),
-        ];
+    public function broadcastAs() {
+        return 'BoardUpdated';
     }
 }

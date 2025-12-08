@@ -2,6 +2,7 @@
 
 namespace App\Livewire\BoardList;
 
+use App\Events\BoardUpdateBroadcast;
 use App\Events\List\ListCreateBroadcast;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -39,7 +40,9 @@ class ListCreate extends Component
             'position' => $position
         ]);
 
-        event(new ListCreateBroadcast($list));
+        event(new BoardUpdateBroadcast($this->board->id, 'list-created', [
+            'list' => $list
+        ]));
 
         $this->reset('list_name');
 

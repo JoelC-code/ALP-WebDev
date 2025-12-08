@@ -2,6 +2,7 @@
 
 namespace App\Livewire\BoardList;
 
+use App\Events\BoardUpdateBroadcast;
 use App\Events\List\ListDeleteBroadcast;
 use App\Models\Board;
 use Illuminate\Support\Facades\Auth;
@@ -33,7 +34,9 @@ class ListDelete extends Component
 
         $list->delete();
 
-        event(new ListDeleteBroadcast($list->id, $this->boardId));
+        event(new BoardUpdateBroadcast($this->board->id, 'list-deleted', [
+            'list_id' => $list->id
+        ]));
 
         $this->dispatch('board-update');
     }

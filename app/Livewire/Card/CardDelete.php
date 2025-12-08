@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Card;
 
+use App\Events\BoardUpdateBroadcast;
 use App\Events\Card\CardDeleteBroadcast;
 use App\Models\Board;
 use App\Models\ListCard;
@@ -35,7 +36,9 @@ class CardDelete extends Component
 
         $card->delete();
 
-        event(new CardDeleteBroadcast($card->id, $this->boardId));
+        event(new BoardUpdateBroadcast($this->boardId, 'card-deleted', [
+            'card_id' => $card->id
+        ]));
 
         $this->dispatch('board-update');
     }
