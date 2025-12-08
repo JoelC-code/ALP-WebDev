@@ -28,7 +28,7 @@ class CreateBoard extends Component
             'isGuest' => false,
         ]);
 
-        event(new BoardUpdateBroadcast($board, 'board-created'));
+        event(new BoardUpdateBroadcast($board));
 
         $this->reset('board_name');
 

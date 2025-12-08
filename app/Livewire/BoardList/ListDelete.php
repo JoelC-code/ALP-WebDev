@@ -34,9 +34,7 @@ class ListDelete extends Component
 
         $list->delete();
 
-        event(new BoardUpdateBroadcast($this->board->id, 'list-deleted', [
-            'list_id' => $list->id
-        ]));
+        event(new BoardUpdateBroadcast($this->board->id));
 
         $this->dispatch('board-update');
     }

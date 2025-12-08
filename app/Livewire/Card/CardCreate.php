@@ -41,9 +41,7 @@ class CardCreate extends Component
             'position' => $position
         ]);
 
-        event(new BoardUpdateBroadcast($this->board->id, 'card-deleted', [
-            'card' => $card
-        ]));
+        event(new BoardUpdateBroadcast($this->board->id));
 
         $this->reset('card_title');
         $this->dispatch('board-update');

@@ -40,9 +40,7 @@ class ListCreate extends Component
             'position' => $position
         ]);
 
-        event(new BoardUpdateBroadcast($this->board->id, 'list-created', [
-            'list' => $list
-        ]));
+        event(new BoardUpdateBroadcast($this->board->id));
 
         $this->reset('list_name');
 

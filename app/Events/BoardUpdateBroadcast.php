@@ -15,13 +15,9 @@ class BoardUpdateBroadcast implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $boardId;
-    public $action;
-    public $payload;
 
-    public function __construct($boardId, $action, $payload = null) {
+    public function __construct($boardId) {
         $this->boardId = $boardId;
-        $this->action = $action;
-        $this->payload = $payload;
     }
 
     /**

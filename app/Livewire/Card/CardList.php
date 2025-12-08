@@ -9,7 +9,7 @@ use Livewire\Component;
 
 class CardList extends Component
 {
-    
+
     public $list;
     public $listId;
     public $showCreateCardForm = false;
@@ -19,21 +19,15 @@ class CardList extends Component
         'board-update' => 'refreshCards',
     ];
 
-    public function showForm() {
-        $this->showCreateCardForm = true;
-    }
-
-    public function createCancel() {
-        $this->showCreateCardForm = false;
-    }
-
-    public function mount(ListCard $list) {
+    public function mount(ListCard $list)
+    {
         $this->listId = $list->id;
         $this->list = ListCard::find($this->listId);
         $this->refreshCards();
     }
 
-    public function refreshCards() {
+    public function refreshCards()
+    {
         $this->list = ListCard::with('cards')->find($this->listId);
 
         if ($this->list && $this->list->board->members->pluck('id')->doesntContain(Auth::id())) {
@@ -41,6 +35,16 @@ class CardList extends Component
         }
 
         $this->cards = $this->list->cards()->orderBy('position')->get();
+    }
+
+    public function showForm()
+    {
+        $this->showCreateCardForm = true;
+    }
+
+    public function createCancel()
+    {
+        $this->showCreateCardForm = false;
     }
 
     public function render()

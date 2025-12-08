@@ -28,7 +28,7 @@ class BoardDelete extends Component
 
         $board->delete();
 
-        event(new BoardUpdateBroadcast($board->id, 'board-deleted'));
+        event(new BoardUpdateBroadcast($board->id));
 
         $this->dispatch('board-update');
     }

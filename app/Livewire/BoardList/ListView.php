@@ -20,18 +20,6 @@ class ListView extends Component
         'hideCreateFormFromParent' => 'createCancel',
     ];
 
-    
-    public function showForm()
-    {
-        $this->showCreateForm = true;
-    }
-
-    public function createCancel()
-    {
-        $this->showCreateForm = false;
-    }
-    
-
     public function mount(Board $board) {
         $this->boardId = $board->id;
         $this->board = Board::find($this->boardId);
@@ -49,6 +37,17 @@ class ListView extends Component
 
         $this->lists = $this->board->lists()->orderBy('position')->get();
     }
+        
+    public function showForm()
+    {
+        $this->showCreateForm = true;
+    }
+
+    public function createCancel()
+    {
+        $this->showCreateForm = false;
+    }
+    
 
     public function render()
     {

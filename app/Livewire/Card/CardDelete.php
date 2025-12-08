@@ -36,9 +36,7 @@ class CardDelete extends Component
 
         $card->delete();
 
-        event(new BoardUpdateBroadcast($this->boardId, 'card-deleted', [
-            'card_id' => $card->id
-        ]));
+        event(new BoardUpdateBroadcast($this->boardId));
 
         $this->dispatch('board-update');
     }
