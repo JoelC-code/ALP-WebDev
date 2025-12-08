@@ -16,7 +16,7 @@
             @endforeach
             @if(! $showCreateForm)
             <div class="card add-card shadow-sm d-flex flex-row p-2 align-items-center" style="width: 300px; height: fit-content; cursor: pointer;" wire:click="showForm">
-                <p class="m-0 w-100">+ Add New List</p>
+                <p class="m-0 w-100">+ Add List</p>
             </div>
             @else
                 <livewire:boardlist.list-create :board="$board" />
