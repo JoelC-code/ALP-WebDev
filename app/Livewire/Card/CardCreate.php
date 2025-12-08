@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Card;
 
+use App\Events\Card\CardCreateBroadcast;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -34,10 +35,12 @@ class CardCreate extends Component
 
         $position = $this->position ?? $this->list->cards()->count() + 1;
 
-        $this->list->cards()->create([
+        $card = $this->list->cards()->create([
             'card_title' => $this->card_title,
             'position' => $position
         ]);
+
+        event(new CardCreateBroadcast($card));
 
         $this->reset('card_title');
         $this->dispatch('card-created');

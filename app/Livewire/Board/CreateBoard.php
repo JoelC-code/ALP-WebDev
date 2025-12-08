@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Board;
 
+use App\Events\Board\BoardCreatBroadcast;
 use App\Models\Board;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
@@ -25,6 +26,8 @@ class CreateBoard extends Component
             'role' => 'admin',
             'isGuest' => false,
         ]);
+
+        event(new BoardCreatBroadcast($board));
 
         $this->reset('board_name');
 

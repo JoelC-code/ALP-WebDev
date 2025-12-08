@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Card;
 
+use App\Events\Card\CardDeleteBroadcast;
 use App\Models\Board;
 use App\Models\ListCard;
 use Illuminate\Support\Facades\Auth;
@@ -33,6 +34,9 @@ class CardDelete extends Component
         $card = $this->list->cards()->where('id', $this->cardId)->findOrFail();
 
         $card->delete();
+
+        event(new CardDeleteBroadcast($card->id, $this->boardId));
+
         $this->dispatch('card-delete');
     }
 
