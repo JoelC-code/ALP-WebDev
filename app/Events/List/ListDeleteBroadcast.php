@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\List;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -10,21 +10,17 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class CardBroadcast implements ShouldBroadcast
+class ListDeleteBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $boardId; 
-    public $action;
     public $listId;
-    public $cardId;
+    public $boardId;
 
-    public function __construct($boardId, $listId, $action, $cardId = null)
+    public function __construct($listId, $boardId) 
     {
-        $this->boardId = $boardId;
-        $this->action = $action;
         $this->listId = $listId;
-        $this->cardId = $cardId;
+        $this->boardId = $boardId;
     }
 
     /**
@@ -32,10 +28,14 @@ class CardBroadcast implements ShouldBroadcast
      *
      * @return array<int, \Illuminate\Broadcasting\Channel>
      */
-    public function broadcastOn(): array
+    public function broadcastOn()
     {
+        return new Channel('board.' . $this->boardId);
+    }
+
+    public function broadcastWith() {
         return [
-            new PrivateChannel('card'.$this->cardId),
+            'list_id' => $this->listId
         ];
     }
 }
