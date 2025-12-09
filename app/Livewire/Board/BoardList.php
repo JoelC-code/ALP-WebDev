@@ -5,6 +5,7 @@ namespace App\Livewire\Board;
 use Livewire\Component;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
 
 class BoardList extends Component
 {
@@ -12,16 +13,18 @@ class BoardList extends Component
     public $otherWorkspaces;
     public $boards;
 
-    protected $listeners = [
-        'board_deleted' => 'refreshBoards'
-    ];
-
     public function mount()
     {
         $this->refreshBoards();
     }
 
-    public function refreshBoards()
+    #[On('board_deleted')]
+    public function refreshBoards() {
+        logger("Livewire refreshed boards after Echo event.");
+        $this->loadBoards();
+    }
+
+    public function loadBoards()
     {
         $user = Auth::user();
 
