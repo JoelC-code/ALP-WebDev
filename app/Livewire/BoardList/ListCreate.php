@@ -2,6 +2,7 @@
 
 namespace App\Livewire\BoardList;
 
+use App\Events\List\ListCreated;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -33,22 +34,23 @@ class ListCreate extends Component
 
         $position = $this->position ?? $this->board->lists()->count() + 1;
 
-        $this->board->lists()->create([
+        $list = $this->board->lists()->create([
             'list_name' => $this->list_name,
             'position' => $position
         ]);
 
         $this->reset('list_name');
 
+        broadcast(new ListCreated($list));
+
         $this->dispatch('list-created');
 
-        $this->dispatch('hideCreateFormFromParent');
+        $this->cancelCreateList();
     }
 
     public function cancelCreateList()
     {
-        // Just tell parent to close the form
-        $this->dispatch('hide-create-form');
+        $this->dispatch('hideCreateFormFromParent')->to(ListView::class);
     }
 
     public function render()

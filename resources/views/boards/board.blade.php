@@ -19,7 +19,12 @@
 
         {{-- Board --}}
         <main id="boardContent" class="p-4">
-            <livewire:boardlist.list-view :board="$board" wire:poll.1s="refreshLists" />
+            @push('scripts')
+            <script>
+                window.boardId = {{ $board->id }};
+            </script>
+            @endpush
+            <livewire:boardlist.list-view :board="$board" />
         </main>
     </div>
 

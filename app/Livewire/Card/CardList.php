@@ -16,18 +16,10 @@ class CardList extends Component
     public $cards = [];
 
     protected $listeners = [
-        'card-delete' => 'refreshCards',
+        'card-deleted' => 'refreshCards',
         'card-created' => 'refreshCards',
         'hideCreateFormCard' => 'createCancel'
     ];
-
-    public function showForm() {
-        $this->showCreateCardForm = true;
-    }
-
-    public function createCancel() {
-        $this->showCreateCardForm = false;
-    }
 
     public function mount(ListCard $list) {
         $this->listId = $list->id;
@@ -43,6 +35,14 @@ class CardList extends Component
         }
 
         $this->cards = $this->list->cards()->orderBy('position')->get();
+    }
+
+    public function showForm() {
+        $this->showCreateCardForm = true;
+    }
+
+    public function createCancel() {
+        $this->showCreateCardForm = false;
     }
 
     public function render()
