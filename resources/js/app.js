@@ -7,6 +7,7 @@ console.log("App.js is loaded");
 
 import Alpine from "alpinejs";
 import { list } from "postcss";
+import { initListSortable } from "./board-sortable";
 
 window.Alpine = Alpine;
 
@@ -25,6 +26,13 @@ window.Echo.channel(`boards`).listen(".BoardRenamed", (e) => {
     console.log("Name from a board has been changed:", e);
     Livewire.dispatch("global-board-renamed", { board: e.board });
 })
+
+//WRAP DRAGGABLE
+//Ini lebih ke untuk ngasih tahu kalau ini pake
+//livewire:navigated
+document.addEventListener("livewire:navigated", () => {
+    initListSortable(window.boardId);
+});
 
 //Ngak usah sentuh yang listener -> if(!window.boardId), hanya untuk tes di console web mu
 document.addEventListener("DOMContentLoaded", () => {
