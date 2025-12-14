@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Card;
 
+use App\Events\Card\CardCreated;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -34,18 +35,23 @@ class CardCreate extends Component
 
         $position = $this->position ?? $this->list->cards()->count() + 1;
 
-        $this->list->cards()->create([
+        $card = $this->list->cards()->create([
             'card_title' => $this->card_title,
             'position' => $position
         ]);
 
         $this->reset('card_title');
         $this->dispatch('card-created');
-        $this->dispatch('hideCreateFormCard');
+        $this->cancelCreateCard();
+
+        //Kita manggil broadcastnya dengan cara begini
+        //Ambil data yang habis dibuat terus bawa ke param CardCreated broadcast
+        //Habis ini ke app.js
+        broadcast(new CardCreated($card));
     }
 
     public function cancelCreateCard() {
-        $this->dispatch('hideCreateFormCard');
+        $this->dispatch('hideCreateFormCard')->to(CardList::class);;
     }
 
     public function render()

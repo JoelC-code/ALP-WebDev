@@ -2,7 +2,8 @@
 
 namespace App\Livewire\Card;
 
-use App\Models\Board;
+use App\Events\Card\CardReordered;
+use App\Models\Card;
 use App\Models\ListCard;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -16,18 +17,12 @@ class CardList extends Component
     public $cards = [];
 
     protected $listeners = [
-        'card-delete' => 'refreshCards',
+        'card-deleted' => 'refreshCards',
         'card-created' => 'refreshCards',
-        'hideCreateFormCard' => 'createCancel'
+        'hideCreateFormCard' => 'createCancel',
+        'cards-reordered' => 'reorderCards',
+        'card-refreshed' => 'refreshCards',
     ];
-
-    public function showForm() {
-        $this->showCreateCardForm = true;
-    }
-
-    public function createCancel() {
-        $this->showCreateCardForm = false;
-    }
 
     public function mount(ListCard $list) {
         $this->listId = $list->id;
@@ -45,9 +40,29 @@ class CardList extends Component
         $this->cards = $this->list->cards()->orderBy('position')->get();
     }
 
+    public function reorderCards(int $cardId, int $fromListId, int $toListId, array $orderedIds) {
+        foreach($orderedIds as $index => $id) {
+            Card::where('id', $id)->update([
+                'list_id' => $toListId,
+                'position' => $index + 1
+            ]);
+        }
+
+        broadcast(new CardReordered($toListId, $orderedIds, $this->list->board->id))->toOthers();
+
+        $this->refreshCards();
+    }
+
+    public function showForm() {
+        $this->showCreateCardForm = true;
+    }
+
+    public function createCancel() {
+        $this->showCreateCardForm = false;
+    }
+
     public function render()
     {
-        logger('render cards at ' . now());
         return view('livewire.card.card-list');
     }
 }

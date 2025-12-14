@@ -1,4 +1,4 @@
-<div class="container workspace-section justify-content-start" wire:poll.visible.1s="refreshBoards">
+<div class="container workspace-section justify-content-start">
     <h3>Your Workspace</h3>
     <div class="board-cards flex flex-warp gap-2">
 
@@ -13,7 +13,7 @@
         @endforeach
 
         <a href="/board-create"
-           class="card w-25 p-4 pt-5 bg-white shadow rounded flex items-center justify-center cursor-pointer hover:bg-gray-100 transition no-underline">
+           class="card w-25 p-4 bg-white shadow rounded flex items-center justify-center cursor-pointer hover:bg-gray-100 transition no-underline">
             <h4 class="fw-bold text-center">Make a<br>Board</h4>
         </a>
 
@@ -25,10 +25,9 @@
     <div class="board-cards flex flex-warp gap-2">
 
         @forelse ($otherWorkspaces as $board)
-            <div class="card p-4 pt-5 bg-card-color shadow rounded justify-content-between d-flex flex-row align-items-start">
+            <div class="card p-4 bg-card-color shadow rounded justify-content-between d-flex flex-row align-items-start">
                 <a class="text-decoration-none">{{ $board->board_name }}</a>
 
-                {{-- FIX #1: Replace WRONG call delete($id) --}}
                 <livewire:board.board-delete
                     :board-id="$board->id"
                     :key="'o-'.$board->id" />
