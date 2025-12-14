@@ -20,6 +20,9 @@
     },
     "dependencies": {
         "@popperjs/core": "^2.11.8",
-        "bootstrap": "^5.3.8"
+        "bootstrap": "^5.3.8",
+        "laravel-echo": "^2.2.6",
+        "pusher-js": "^8.4.0",
+        "sortablejs": "^1.15.6"
     }
 }

@@ -15,6 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('/style.css') }}">
     <title>@yield('title')</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
 
@@ -27,6 +28,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
     @livewireScripts
+    @stack('scripts')
 </body>
 
 </html>

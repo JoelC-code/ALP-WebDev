@@ -19,7 +19,13 @@
 
         {{-- Board --}}
         <main id="boardContent" class="p-4">
-            <livewire:boardlist.list-view :board="$board" wire:poll.1s="refreshLists" />
+            <livewire:board.board-rename :board="$board" :key="'board-renamed-' . $board->id . '-' . $board->updated_at" />
+            @push('scripts')
+            <script>
+                window.boardId = {{ $board->id }};
+            </script>
+            @endpush
+            <livewire:boardlist.list-view :board="$board" />
         </main>
     </div>
 

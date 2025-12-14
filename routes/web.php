@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
+use Illuminate\Support\Facades\Broadcast;
 
 Route::get('/', function () {
     return view('welcome');
@@ -34,4 +35,7 @@ Route::get('/laika', function() {
     return redirect('/dashboard');
 });
 
+Broadcast::routes(['middleware' => ['auth']]);
+
 require __DIR__.'/auth.php';
+require __DIR__.'/channels.php';

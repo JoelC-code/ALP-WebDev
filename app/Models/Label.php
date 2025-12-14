@@ -20,7 +20,7 @@ class Label extends Model
     }
 
     public function cardTemplates(): HasMany {
-        return $this->hasMany(Card_Template::class);
+        return $this->hasMany(CardTemplate::class);
     }
 
     public function board(): BelongsTo {

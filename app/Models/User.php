@@ -30,12 +30,10 @@ class User extends Authenticatable
     {
         parent::boot();
         static::creating(function ($user) {
-            logger('EVENT RUNNING: creating user');
             do {
                 $invite = str_pad(random_int(0, 9999999), 7, '0', STR_PAD_LEFT);
             } while (User::where('invite_id', $invite)->exists());
             $user->invite_id = $invite;
-            logger('INVITE GENERATED: ' . $invite);
         });
     }
 
