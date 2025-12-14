@@ -73,13 +73,13 @@ function subscribedToBoard(boardId) {
     })
 
     .listen(".CardReordered", (e) => {
-        console.log("Detected a card reposition:", e);
+        console.log("Card position change (type-2):", e);
         Livewire.dispatch("card-refreshed" , { listId: e.toListId })
     })
 
     .listen(".ListReordered", (e) => {
-        console.log("Detected a change of a list position:", e)
-        Livewire.dispatch("list-refreshed", { listId: e.listId })
+        console.log("List position change (type-1):", e)
+        Livewire.dispatch("list-refreshed")
     })
     //Ini jika kau mau munculin dengan non private (Channel)
 }

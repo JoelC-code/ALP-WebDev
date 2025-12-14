@@ -24,7 +24,6 @@ class BoardList extends Component
     #[On('board_deleted')]
     public function refreshBoards()
     {
-        logger("Livewire refreshed boards after Echo event.");
         $this->loadBoards();
     }
 

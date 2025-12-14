@@ -45,6 +45,8 @@ class ListView extends Component
     }
 
     public function refreshLists() {
+        logger('refreshList:', ['boardId' => $this->boardId]);
+
         $this->board = Board::with('lists')->find($this->boardId);
 
         $pivot = $this->board->members()->where('user_id', Auth::id())->first()?->pivot;
@@ -61,14 +63,13 @@ class ListView extends Component
             ListCard::where('id', $listId)->update(['position' => $index + 1]);
         }
 
-        broadcast(new ListReordered($this->boardId, $orderedIds))->toOthers();
+        broadcast(new ListReordered($this->boardId, $orderedIds));
 
         $this->refreshLists();
     }
 
     public function render()
     {
-        logger('render fired at ' . now());
         return view('livewire.list.list-view');
     }
 }
