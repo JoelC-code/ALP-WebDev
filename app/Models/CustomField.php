@@ -18,7 +18,7 @@ class CustomField extends Model
 
     //Pivot Cards <-> Custom Fields
     public function Cards(): BelongsToMany {
-        return $this->belongsToMany(Card::class, 'field_card')
+        return $this->belongsToMany(Card::class, 'field_cards')
                     ->using(FieldCard::class)
                     ->withPivot('value');
     }
@@ -38,8 +38,8 @@ class CustomField extends Model
         return $this->hasMany(FieldTemplate::class);
     }
 
-    public function board(): HasMany {
-        return $this->hasMany(Board::class);
+    public function board(): BelongsTo {
+        return $this->belongsTo(Board::class);
     }
 
     //logs

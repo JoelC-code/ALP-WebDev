@@ -15,8 +15,8 @@ class Label extends Model
         'board_id'
     ];
 
-    public function cards(): HasMany {
-        return $this->hasMany(Card::class);
+    public function cards(): BelongsToMany {
+        return $this->belongsToMany(Card::class);
     }
 
     public function cardTemplates(): HasMany {

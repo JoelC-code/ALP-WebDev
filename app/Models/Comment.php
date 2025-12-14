@@ -4,21 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Comment extends Model
 {
     protected $fillable = [
+        'card_id',
         'user_id',
         'comment_content',
-        'date'
     ];
 
-    public function cards(): HasMany {
-        return $this->hasMany(Card::class);
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'edited_at' => 'datetime',
+    ];
+
+    public function card(): BelongsTo {
+        return $this->belongsTo(Card::class);
     }
 
-    public function users(): BelongsTo {
+    public function user(): BelongsTo {
         return $this->belongsTo(User::class);
     }
 }

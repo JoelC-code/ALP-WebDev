@@ -15,6 +15,13 @@ class CardList extends Component
     public $listId;
     public $showCreateCardForm = false;
     public $cards = [];
+    public $selectedCard = null;
+    public $showCardModal = false;
+    public $editMode = false;
+    public $cardTitle;
+    public $cardDescription;
+    public $editingTitle = false;
+    public $editingDescription = false;
 
     protected $listeners = [
         'card-deleted' => 'refreshCards',
@@ -59,6 +66,51 @@ class CardList extends Component
 
     public function createCancel() {
         $this->showCreateCardForm = false;
+    }
+
+    public function openCard($cardId) {
+        $this->selectedCard = Card::find($cardId);
+        $this->showCardModal = true;
+        $this->editMode = false;
+        $this->cardTitle = $this->selectedCard->card_title;
+        $this->cardDescription = $this->selectedCard->description;
+    }
+
+    public function closeCard() {
+        $this->showCardModal = false;
+        $this->selectedCard = null;
+        $this->editMode = false;
+        $this->dispatch('reset-fields');
+    }
+
+    public function deleteCard($cardId = null) {
+    if ($cardId) {
+        Card::find($cardId)->delete();
+    } else {
+        $this->selectedCard->delete();
+        $this->closeCard();
+    }
+    $this->refreshCards();
+    }
+
+    public function toggleEditTitle()
+    {
+        if ($this->editingTitle && $this->cardTitle) {
+            $this->selectedCard->update([
+                'card_title' => $this->cardTitle,
+            ]);
+        }
+        $this->editingTitle = !$this->editingTitle;
+    }
+
+    public function toggleEditDescription()
+    {
+        if ($this->editingDescription) {
+            $this->selectedCard->update([
+                'description' => $this->cardDescription,
+            ]);
+        }
+        $this->editingDescription = !$this->editingDescription;
     }
 
     public function render()
