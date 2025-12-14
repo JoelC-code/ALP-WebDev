@@ -2,7 +2,7 @@
 
 namespace App\Livewire\BoardList;
 
-use App\Events\List\ListReordered as ListListReordered;
+use App\Events\List\ListReordered;
 use App\Models\Board;
 use App\Models\ListCard;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +23,7 @@ class ListView extends Component
         'list-deleted' => 'refreshLists',
         'list-renamed' => 'refreshLists',
         'lists-reordered' => 'reorderLists',
-        'list-reordered' => 'refreshLists',
+        'list-refreshed' => 'refreshLists',
     ];
 
     
@@ -56,12 +56,12 @@ class ListView extends Component
         $this->lists = $this->board->lists()->orderBy('position')->get();
     }
 
-    public function reorderLists($boardId, $orderedIds){
+    public function reorderLists(int $boardId, array $orderedIds){
         foreach($orderedIds as $index => $listId) {
             ListCard::where('id', $listId)->update(['position' => $index + 1]);
         }
 
-        broadcast(new ListListReordered($this->boardId, $orderedIds))->toOthers();
+        broadcast(new ListReordered($this->boardId, $orderedIds))->toOthers();
 
         $this->refreshLists();
     }

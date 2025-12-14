@@ -2,7 +2,7 @@ import Sortable from "sortablejs";
 
 export function initListSortable(boardId) {
     const wrapList = document.getElementById("list-sortable");
-    if(!wrapList) return;
+    if (!wrapList) return;
 
     Sortable.create(wrapList, {
         animation: 150,
@@ -10,18 +10,25 @@ export function initListSortable(boardId) {
 
         draggable: ".list-view",
 
+        group: {
+            name: "lists",
+            pull: true,
+            put: false,
+        },
+
         onEnd() {
             const orderedIds = Array.from(
                 wrapList.querySelectorAll(
                     ".list-view:not(.sortable-ghost):not(.sortable-chosen)"
                 )
-            ).map(el => el.dataset.listId);
+            ).map((el) => el.dataset.listId);
 
-            console.log("Ordered: IDs:", orderedIds)
+            console.log('List changes ID: ', orderedIds)
 
             Livewire.dispatch("lists-reordered", {
-                boardId, orderedIds
+                boardId,
+                orderedIds,
             });
-        }
+        },
     });
 }
