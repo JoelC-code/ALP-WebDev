@@ -21,7 +21,7 @@ class Card extends Model
 
     //Pivot Card <-> Custom Fields
     public function customFields(): BelongsToMany {
-        return $this->belongsToMany(CustomField::class)
+        return $this->belongsToMany(CustomField::class, 'field_cards')
                     ->using(FieldCard::class)
                     ->withPivot('value');
     }
@@ -38,8 +38,8 @@ class Card extends Model
         return $this->hasMany(User::class);
     }
 
-    public function labels(): HasMany {
-        return $this->hasMany(Label::class);
+    public function labels(): BelongsToMany {
+    return $this->belongsToMany(Label::class);
     }
 
     public function comments(): HasMany {

@@ -20,12 +20,15 @@
         {{-- Board --}}
         <main id="boardContent" class="p-4">
             <livewire:board.board-rename :board="$board" :key="'board-renamed-' . $board->id . '-' . $board->updated_at" />
+            <livewire:custom-field.custom-field-list :board="$board" />
+            <livewire:custom-field.custom-field-create :board="$board" />
             @push('scripts')
             <script>
                 window.boardId = {{ $board->id }};
             </script>
             @endpush
             <livewire:boardlist.list-view :board="$board" />
+            
         </main>
     </div>
 
