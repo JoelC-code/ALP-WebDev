@@ -11,10 +11,12 @@ class ListRename extends Component
     public $list;
     public $list_name;
     public $editList = false;
+    public $board;
 
-    public function mount(ListCard $list) {
+    public function mount(ListCard $list, $board) {
         $this->list = $list;
         $this->list_name = $list->list_name;
+        $this->board = $board;
     }
 
     public function showEditList() {
