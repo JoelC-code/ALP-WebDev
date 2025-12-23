@@ -27,6 +27,11 @@ class BoardList extends Component
         $this->loadBoards();
     }
 
+    #[On('member_added')]
+    public function handleMemberAdded() {
+        $this->loadBoards();
+    }
+
     public function loadBoards()
     {
         $user = Auth::user();
@@ -39,7 +44,7 @@ class BoardList extends Component
             );
 
             $this->otherWorkspaces = $this->boards->filter(
-                fn($board) => $board->pivot->isGuest === true
+                fn($board) => $board->pivot->isGuest == true
             );
         } else {
             $this->myWorkspaces = collect([]);

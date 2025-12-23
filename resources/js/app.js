@@ -17,6 +17,9 @@ window.Echo.channel("boards")
     .listen(".BoardRenamed", (e) => {
         Livewire.dispatch("global-board-renamed", { board: e.board });
     })
+    .listen(".BoardInvited", (e) => {
+        Livewire.dispatch("member_added", { board: e.board });
+    })
 
 //WRAP DRAGGABLE
 //Ini lebih ke untuk ngasih tahu kalau ini pake

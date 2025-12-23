@@ -77,9 +77,6 @@
                         </div>
 
                         <hr>
-                        <button class="btn btn-sm btn-outline-secondary" wire:click="$set('showLabels', false)">Labels</button>
-
-                        <hr>
                         <livewire:custom-field.custom-field-view :card="$selectedCard" :key="'custom-field-' . $selectedCard->id . '-' . now()->timestamp" />
                         
                         <hr>

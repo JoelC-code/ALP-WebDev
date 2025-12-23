@@ -22,6 +22,8 @@
             <livewire:board.board-rename :board="$board" :key="'board-renamed-' . $board->id . '-' . $board->updated_at" />
             <livewire:custom-field.custom-field-list :board="$board" />
             <livewire:custom-field.custom-field-create :board="$board" />
+            <livewire:board.board-invite :board="$board" />
+
             @push('scripts')
             <script>
                 window.boardId = {{ $board->id }};
