@@ -23,7 +23,7 @@
             <livewire:custom-field.custom-field-list :board="$board" />
             <livewire:custom-field.custom-field-create :board="$board" />
             <livewire:board.board-invite :board="$board" />
-
+            <livewire:board.board-member-list :board="$board" />
             @push('scripts')
             <script>
                 window.boardId = {{ $board->id }};

@@ -29,7 +29,7 @@
                 @if(auth()->user()->memberBoards->firstWhere('id', $board->id)->pivot->role == "admin")
                     <button class="btn fw-bold" style="background-color:white; border-radius:20px; color:#003BFF;" wire:click="$dispatch('open-invite-modal')">Invite</button>
                 @endif
-                <button class="btn fw-bold" style="background-color:white; border-radius:20px; color:#003BFF;">Members</button>
+                <button class="btn fw-bold" style="background-color:white; border-radius:20px; color:#003BFF;" wire:click="$dispatch('open-modal-members')">Members</button>
                 <button class="btn fw-bold" style="background-color:white; border-radius:20px; color:#003BFF;">Logs</button>
             </div>
         </div>
