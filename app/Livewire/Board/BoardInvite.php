@@ -69,6 +69,8 @@ class BoardInvite extends Component
         $this->reset('inviteId');
 
         event(new BoardInvited($this->board));
+        
+        $this->dispatch('member_added');
     }
 
     public function render()
