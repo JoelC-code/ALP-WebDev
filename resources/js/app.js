@@ -4,10 +4,21 @@ import "./bootstrap";
 import Alpine from "alpinejs";
 import { initListSortable } from "./board-sortable";
 import { initCardSortable } from "./card-sortable";
+import { initInboxSortable } from "./inbox-sortable";
 
 window.Alpine = Alpine;
 
 Alpine.start();
+
+function bootSortables(boardId) {
+    initInboxSortable();
+    initCardSortable(boardId);
+    initListSortable(boardId)
+}
+
+Livewire.hook("message.processed", () => {
+    bootSortables(window.boardId);
+})
 
 //This is where you executed the boards
 window.Echo.channel("boards")
@@ -21,14 +32,16 @@ window.Echo.channel("boards")
         Livewire.dispatch("member_added", { board: e.board });
     });
 
+document.addEventListener("livewire:init", () => {
+    bootSortables(window.boardId);
+});
 //WRAP DRAGGABLE
 //Ini lebih ke untuk ngasih tahu kalau ini pake
 //livewire:navigated
 document.addEventListener("livewire:navigated", () => {
     if (!window.boardId) return;
     subscribedToBoard(window.boardId);
-    initListSortable(window.boardId);
-    initCardSortable(window.boardId);
+    bootSortables(window.boardId);
 });
 
 const subscribedBoard = new Set();

@@ -7,9 +7,9 @@
                 <button class="btn btn-primary" wire:click="addInbox">Add</button>
             </div>
 
-            <div class="inbox-list d-flex flex-column gap-2" wire:ignore id="inboxSortable">
+            <div class="inbox-list d-flex flex-column gap-2" id="inboxSortable">
                 @forelse($inboxes as $inbox)
-                    <div class="card inbox-card" data-id="{{ $inbox['id'] }}" wire:key="inbox-{{ $inbox['id'] }}">
+                    <div class="card inbox-card" data-inbox-id="{{ $inbox['id'] }}" data-type="inbox" wire:key="inbox-{{ $inbox['id'] }}" wire:ignore.self>
                         <div class="card-body p-2 d-flex justify-content-between align-items-center">
                             <p class="fw-medium">
                                 {{ $inbox['title'] }}

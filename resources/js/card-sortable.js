@@ -25,11 +25,37 @@ export function initCardSortable(boardId) {
                 put: ["cards"],
             },
 
+            onAdd(evt) {
+                const item = evt.item;
+
+                if(item.dataset.inboxId) {
+                    const title = item.querySelector("p")?.innerText.trim();
+                    const toListId = evt.to.dataset.listId;
+
+                    if(!title || !toListId) {
+                        item.remove();
+                        return;
+                    }
+
+                    Livewire.dispatch("inbox-dropped", {
+                        inboxId: item.dataset.inboxId,
+                        title,
+                        listId: toListId
+                    });
+
+                    item.remove();
+                }
+            },
+
             //Event object, evt untuk dapat mindah mindah datanya
             onEnd(evt) {
+                const item = evt.item;
+
+                if(item.dataset.inboxId) return;
+
                 const fromListId = evt.from.dataset.listId;
                 const toListId = evt.to.dataset.listId;
-                const cardId = evt.item.dataset.cardId;
+                const cardId = item.dataset.cardId;
 
                 const orderedIds = Array.from(
                     evt.to.querySelectorAll(
