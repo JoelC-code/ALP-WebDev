@@ -39,18 +39,10 @@ class InboxActions extends Component
 
     #[On('inbox-dropped')]
     public function inboxDropped($title, $listId, $inboxId) {
-        logger()->info('Inbox dropped', compact('title', 'listId'));
-
         $this->inboxToCard($title, $listId, $inboxId);
     }
 
     public function inboxToCard(string $title, int $listId, string $inboxId) {
-        logger()->info('Inbox -> Card', [
-            'title' => $title,
-            'listId' => $listId,
-            'boardId' => $this->boardId,
-        ]);
-
         $list = ListCard::where('id', $listId)
             ->where('board_id', $this->boardId)
             ->first();
@@ -72,8 +64,6 @@ class InboxActions extends Component
             'card_title' => $title,
             'position' => $position
         ]);
-
-        logger()->info('Inbox has been succefully become card', ['card_id' => $card->id]);
 
         $this->removeInbox($inboxId);
 
