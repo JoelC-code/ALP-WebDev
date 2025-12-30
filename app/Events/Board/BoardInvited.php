@@ -24,7 +24,10 @@ class BoardInvited implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        return new Channel('board');
+        return [
+            new PrivateChannel('board.' . $this->board->id),
+            new Channel('boards'),
+        ];
     }
 
     public function broadcastAs() {

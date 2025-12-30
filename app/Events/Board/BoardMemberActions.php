@@ -26,7 +26,10 @@ class BoardMemberActions implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        return new PrivateChannel('board.' . $this->board->id);
+        return[ 
+            new PrivateChannel('board.' . $this->board->id),
+            new Channel('boards'),
+        ];
     }
 
     public function broadcastAs() {

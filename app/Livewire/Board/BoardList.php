@@ -32,6 +32,11 @@ class BoardList extends Component
         $this->loadBoards();
     }
 
+    #[On('member_disconnect')]
+    public function handleRefreshDisconnect() {
+        $this->loadBoards();
+    }
+
     public function loadBoards()
     {
         $user = Auth::user();

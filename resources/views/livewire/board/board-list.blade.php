@@ -27,7 +27,7 @@
             <div class="card p-4 bg-card-color shadow rounded justify-content-between d-flex flex-row align-items-center gap-4">
                 <a href="{{ route('board.access', $board->id) }}" class="text-decoration-none text-truncate">{{ $board->board_name }}</a>
 
-                <livewire:board.board-delete
+                <livewire:board.board-disconnect
                     :board-id="$board->id"
                     :key="'o-'.$board->id" />
 

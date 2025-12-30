@@ -25,6 +25,9 @@ window.Echo.channel("boards")
     })
     .listen(".BoardInvited", (e) => {
         Livewire.dispatch("member_added", { board: e.board });
+    })
+    .listen(".BoardMemberActions", (e) => {
+        Livewire.dispatch("member_disconnect", { board: e.board })
     });
 
 document.addEventListener("livewire:init", () => {

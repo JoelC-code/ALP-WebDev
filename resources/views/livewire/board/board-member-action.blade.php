@@ -26,5 +26,11 @@
             </button>
         </div>
     </div>
+    @else 
+        <div class="d-flex flex-column justify-content-center align-items-center w-100">
+            <div> 
+                <p class="text-muted">404 | User not found</p>
+            </div>
+        </div>
     @endif
 </div>
