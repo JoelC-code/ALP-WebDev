@@ -1,5 +1,5 @@
 @extends('layouts.nav')
-@section('title', 'Make a board')
+@section('title', $board->board_name)
 @section('mainContent')
     <div class="board-layout d-flex flex-row">
 

@@ -109,6 +109,7 @@ function subscribedToBoard(boardId) {
 
 document.addEventListener("DOMContentLoaded", () => {
     const btn = document.getElementById("toggleSidebar");
+    if(!btn) return;
     const key = 'sidebar-collapsed';
 
     if(localStorage.getItem(key) === '1') {
