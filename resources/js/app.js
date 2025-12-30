@@ -1,14 +1,9 @@
 import "../css/app.css";
 import "./bootstrap";
-
-import Alpine from "alpinejs";
 import { initListSortable } from "./board-sortable";
 import { initCardSortable } from "./card-sortable";
 import { initInboxSortable } from "./inbox-sortable";
 
-window.Alpine = Alpine;
-
-Alpine.start();
 
 function bootSortables(boardId) {
     initInboxSortable();

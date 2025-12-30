@@ -15,7 +15,6 @@
             <p class="fw-bold fs-3">You Are Searching For:</p>
             <p class="fw-bold fs-5">{{ $searchData }}</p>
         </div>
-
         <div class="board-cards d-grid gap-2" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));">
             @forelse($boards as $board)
                 <a href="{{ route('board.access', $board->id) }}"
@@ -28,5 +27,6 @@
                 </p>
             @endforelse
         </div>
+        <a class="btn btn-primary w-100 mt-5 text-center" href="/dashboard">← Return To Dashboard</a>
     </div>
 @endsection
