@@ -3,6 +3,7 @@
 namespace App\Livewire\CustomField;
 
 use App\Models\CustomField;
+use App\Models\Log;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -29,7 +30,19 @@ class CustomFieldDelete extends Component
             abort(403, 'Unauthorized');
         }
 
+        $customFieldName = $this->field->title;
+        $customFieldId = $this->field->id;
+
         $this->field->delete();
+
+        Log::create([
+            'board_id' => $this->board->id,
+            'user_id' => Auth::id(),
+            'loggable_type' => CustomField::class,
+            'loggable_id' => $customFieldId,
+            'details' => 'Deleted custom field "' . $customFieldName . '"',
+        ]);
+
         $this->dispatch('field-deleted');
     }
 

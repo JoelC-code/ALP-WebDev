@@ -3,6 +3,8 @@
 namespace App\Livewire\Card;
 
 use App\Events\Card\CardCreated;
+use App\Models\Card;
+use App\Models\Log;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -40,10 +42,15 @@ class CardCreate extends Component
             'position' => $position
         ]);
 
+        Log::create([
+            'board_id' => $this->board_id,
+            'user_id' => Auth::id(),
+            'loggable_type' => Card::class,
+            'loggable_id' => $card->id,
+            'details' => $this->card_title . ' has been made' ,
+        ]);
+
         $this->reset('card_title');
-            //Kita manggil broadcastnya dengan cara begini
-        //Ambil data yang habis dibuat terus bawa ke param CardCreated broadcast
-        //Habis ini ke app.js
         broadcast(new CardCreated($card));
         $this->cancelCreateCard();
     }

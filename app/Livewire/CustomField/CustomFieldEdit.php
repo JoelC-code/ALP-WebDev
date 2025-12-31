@@ -3,6 +3,7 @@
 namespace App\Livewire\CustomField;
 
 use App\Models\CustomField;
+use App\Models\Log;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -44,9 +45,17 @@ class CustomFieldEdit extends Component
             'fieldType' => 'required|in:text,select,number,checkbox',
         ]);
 
-        $this->field->update([
+        $customFieldUpdate = $this->field->update([
             'title' => $this->fieldTitle,
             'type' => $this->fieldType,
+        ]);
+
+        Log::create([
+            'board_id' => $this->board->id,
+            'user_id' => Auth::id(),
+            'loggable_type' => CustomField::class,
+            'loggable_id' => $this->field->id,
+            'details' => 'Changed field: "' . $this->fieldTitle . ' with the types of ' . $this->fieldType,
         ]);
 
         $this->editMode = false;

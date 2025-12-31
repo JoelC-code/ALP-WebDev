@@ -3,6 +3,8 @@
 namespace App\Livewire\BoardList;
 
 use App\Events\List\ListCreated;
+use App\Models\ListCard;
+use App\Models\Log;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -37,6 +39,14 @@ class ListCreate extends Component
         $list = $this->board->lists()->create([
             'list_name' => $this->list_name,
             'position' => $position
+        ]);
+
+        Log::create([
+            'board_id' => $this->board_id,
+            'user_id' => Auth::id(),
+            'loggable_type' => ListCard::class,
+            'loggable_id' => $list->id,
+            'details' => 'New list has been created with the name ' . $this->list_name,
         ]);
 
         $this->reset('list_name');

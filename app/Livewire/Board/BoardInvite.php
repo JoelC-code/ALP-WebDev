@@ -5,6 +5,7 @@ namespace App\Livewire\Board;
 use App\Events\Board\BoardInvited;
 use App\Events\Board\BoardMemberToast;
 use App\Models\Board;
+use App\Models\Log;
 use App\Models\User;
 use App\Support\ToastMessage;
 use Illuminate\Support\Facades\Auth;
@@ -67,6 +68,14 @@ class BoardInvite extends Component
         $this->board->members()->attach($user->id, [
             'role' => 'member',
             'isGuest' => true,
+        ]);
+
+        Log::create([
+            'board_id' => $this->board->id,
+            'user_id' => Auth::id(),
+            'loggable_type' => User::class,
+            'loggable_id' => $user->id,
+            'details' => 'Invited user ' . $user->name . ' to the board',
         ]);
 
         $toast = [

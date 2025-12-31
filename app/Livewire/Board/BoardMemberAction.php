@@ -5,10 +5,11 @@ namespace App\Livewire\Board;
 use App\Events\Board\BoardMemberActions;
 use App\Events\Board\BoardMemberToast;
 use App\Models\Board;
+use App\Models\Log;
+use App\Models\User;
 use App\Support\ToastMessage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -76,12 +77,12 @@ class BoardMemberAction extends Component
             ['role' => $this->role]
         );
 
-        Log::info('BoardMemberAction: setting toast for role change', [
-            'cache_key' => 'toast:user:' . $this->member->id,
-            'member_id' => $this->member->id,
-            'board_id'  => $this->board->id,
-            'role'      => $this->role,
-            'actor_id'  => Auth::id(),
+        Log::create([
+            'board_id' => $this->board->id,
+            'user_id' => Auth::id(),
+            'loggable_type' => User::class,
+            'loggable_id' => $this->member->id,
+            'details' => 'Changed role of user ' . $this->member->name . ' to ' . $this->newRole . '.',
         ]);
 
         $toast = [
@@ -119,6 +120,14 @@ class BoardMemberAction extends Component
         }
 
         $this->board->members()->detach($userId);
+
+        Log::create([
+            'board_id' => $this->board->id,
+            'user_id' => Auth::id(),
+            'loggable_type' => User::class,
+            'loggable_id' => $this->member->id,
+            'details' => 'Removed user ' . $this->member->name . ' from the board',
+        ]);
 
         $toast = [
                 'type' => 'board_removed',

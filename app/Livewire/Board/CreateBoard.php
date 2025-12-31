@@ -3,6 +3,7 @@
 namespace App\Livewire\Board;
 
 use App\Models\Board;
+use App\Models\Log;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,6 +25,14 @@ class CreateBoard extends Component
         $board->members()->attach(Auth::id(), [
             'role' => 'admin',
             'isGuest' => false,
+        ]);
+
+        Log::create([
+            'board_id' => $this->board->id,
+            'user_id' => Auth::id(),
+            'loggable_type' => Board::class,
+            'loggable_id' => $this->member->id,
+            'details' => $this->board_name . ' has been succesfully made',
         ]);
 
         $this->reset('board_name');

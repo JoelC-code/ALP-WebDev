@@ -3,6 +3,8 @@
 namespace App\Livewire\CustomField;
 
 use App\Models\Board;
+use App\Models\CustomField;
+use App\Models\Log;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -35,9 +37,17 @@ class CustomFieldCreate extends Component
             abort(403, 'Unauthorized');
         }
 
-        $this->board->customFields()->create([
+        $customField = $this->board->customFields()->create([
             'title' => $this->fieldTitle,
             'type' => $this->fieldType,
+        ]);
+
+        Log::create([
+            'board_id' => $this->board->id,
+            'user_id' => Auth::id(),
+            'loggable_type' => CustomField::class,
+            'loggable_id' => $customField->id,
+            'details' => 'Created custom field "' . $customField->title . '" of type ' . $customField->type,
         ]);
 
         $this->fieldTitle = '';

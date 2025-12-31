@@ -4,6 +4,8 @@ namespace App\Livewire\Board;
 
 use App\Events\Board\BoardRenamed;
 use App\Models\Board;
+use App\Models\Log;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -31,12 +33,17 @@ class BoardRename extends Component
             'board_name' => $this->board_name
         ]);
 
+        Log::create([
+            'board_id' => $this->board->id,
+            'user_id' => Auth::id(),
+            'loggable_type' => Board::class,
+            'loggable_id' => $this->board->id,
+            'details' => 'Changed the board name into ' . $this->board_name,
+        ]);
+
         $this->edit = false;
 
         broadcast(new BoardRenamed($this->board))->toOthers();
-
-        $this->dispatch('board-renamed');
-        $this->dispatch('global-board-renamed');
     }
 
     #[On('board-renamed')]

@@ -4,6 +4,8 @@ namespace App\Livewire\Board;
 
 use App\Events\Board\BoardMemberActions;
 use App\Models\Board;
+use App\Models\Card;
+use App\Models\Log;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -14,24 +16,27 @@ class BoardDisconnect extends Component
 
     public function leave() {
         $user = Auth::user();
-        logger("Done got the UserId");
         $board = Board::findOrFail($this->boardId);
-        logger("Done catching both UserId & Board");
 
         $pivot = $board->members()
             ->where('user_id', $user->id)
             ->first()
             ?->pivot;
-        logger("Checking the pivot");
 
         if(! $pivot || ! $pivot->isGuest) {
             abort(403);
         }
 
-        logger("Prepping for the disconnect");
         $board->members()->detach($user->id);
 
-        logger("Done and being sent to the broadcast");
+        Log::create([
+            'board_id' => $board->id,
+            'user_id' => $user->id,
+            'loggable_type' => Board::class,
+            'loggable_id' => $board->id,
+            'details' => 'User ' . $user->name . ' left the board',
+        ]);
+
         broadcast(new BoardMemberActions($board, $user));
     }
 

@@ -4,6 +4,8 @@ namespace App\Livewire\BoardList;
 
 use App\Events\List\ListDeleted;
 use App\Models\Board;
+use App\Models\ListCard;
+use App\Models\Log;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -31,7 +33,17 @@ class ListDelete extends Component
             abort(403, 'Unauthorized access, you are not part of the board');
         }
 
+        $listName = $list->list_name;
+
         $list->delete();
+
+        Log::create([
+            'board_id' => $this->boardId,
+            'user_id' => Auth::id(),
+            'loggable_type' => ListCard::class,
+            'loggable_id' => $list->id,
+            'details' => 'List ' . $listName . ' has been deleted.',
+        ]);
 
         $this->dispatch('list-deleted');
 
