@@ -1,8 +1,8 @@
 <div>
     @if($show)
         <div class="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-            style="background-color: rgba(0, 0, 0, 0.5); z-index: 1050;">
-            <div class="card shadow d-flex flex-column" style="width: 400px; max-height: 80vh;">
+            style="background-color: rgba(0, 0, 0, 0.5); z-index: 9999;">
+            <div class="card shadow d-flex flex-column" style="width: 400px; max-height: 80vh; z-index: 10001">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4>Members</h4>
                     @if(! $selectedUserId)

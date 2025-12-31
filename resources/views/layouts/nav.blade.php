@@ -25,7 +25,7 @@
 
 <body class="d-flex flex-column min-vh-100">
     @include('components.header')
-    <main class="z-0 bg-color-main-one">
+    <main class="bg-color-main-one">
         @yield('mainContent')
     </main>
     <x-toast />
