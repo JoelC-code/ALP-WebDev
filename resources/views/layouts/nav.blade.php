@@ -8,6 +8,7 @@
     @auth
         <meta name="user-id" content="{{ auth()->id() }}">
     @endauth
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('/Images/StackBoard.png') }}">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
