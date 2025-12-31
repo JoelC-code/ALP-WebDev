@@ -46,8 +46,8 @@ class Board extends Model
     }
 
     //logs
-    public function logs(): MorphMany
+    public function logs(): HasMany
     {
-        return $this->morphMany(Log::class, 'loggable');
+        return $this->hasMany(Log::class);
     }
 }
