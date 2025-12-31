@@ -5,6 +5,7 @@ namespace App\Livewire\Card;
 use App\Events\Card\CardReordered;
 use App\Models\Card;
 use App\Models\ListCard;
+use App\Models\Log;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -103,20 +104,41 @@ class CardList extends Component
 
     public function deleteCard($cardId = null)
     {
-        if ($cardId) {
-            Card::find($cardId)->delete();
-        } else {
-            $this->selectedCard->delete();
-            $this->closeCard();
-        }
+        $card = $cardId ? Card::find($cardId) : $this->selectedCard;
+
+        $cardTitle = $card->card_title;
+        $cardIdVal = $card->id;
+        $boardId = $card->list->board->id;
+
+        $card->delete();
+
+        Log::create([
+            'board_id'      => $boardId,
+            'user_id'       => Auth::id(),
+            'loggable_type' => Card::class,
+            'loggable_id'   => $cardIdVal,
+            'details'       => 'Deleted card: "' . $cardTitle . '"',
+        ]);
+
+        if(! $cardId) $this->closeCard();
+
         $this->refreshCards();
     }
 
     public function toggleEditTitle()
     {
         if ($this->editingTitle && $this->cardTitle) {
+            $oldTitle = $this->selectedCard->card_title;
             $this->selectedCard->update([
                 'card_title' => $this->cardTitle,
+            ]);
+
+            Log::create([
+                'board_id'      => $this->selectedCard->list->board->id,
+                'user_id'       => Auth::id(),
+                'loggable_type' => Card::class,
+                'loggable_id'   => $this->selectedCard->id,
+                'details'       => 'Changed card title: "' . $oldTitle . '" → "' . $this->cardTitle . '"',
             ]);
         }
         $this->editingTitle = !$this->editingTitle;
@@ -125,25 +147,37 @@ class CardList extends Component
     public function toggleEditDescription()
     {
         if ($this->editingDescription) {
+            $oldDesc = $this->selectedCard->description;
             $this->selectedCard->update([
                 'description' => $this->cardDescription,
+            ]);
+
+            Log::create([
+                'board_id'      => $this->selectedCard->list->board->id,
+                'user_id'       => Auth::id(),
+                'loggable_type' => Card::class,
+                'loggable_id'   => $this->selectedCard->id,
+                'details'       => 'Description has been updated for ' . $this->selectedCard->cardTitle,
             ]);
         }
         $this->editingDescription = !$this->editingDescription;
     }
 
 
-    public function openCreateLabel() {
+    public function openCreateLabel()
+    {
         $this->activeLabelId = null;
         $this->labelView = 'form';
     }
 
-    public function openEditLabel($labelId) {
+    public function openEditLabel($labelId)
+    {
         $this->activeLabelId = $labelId;
         $this->labelView = 'form';
     }
 
-    public function backToLabelList() {
+    public function backToLabelList()
+    {
         $this->activeLabelId = null;
         $this->labelView = 'list';
     }
