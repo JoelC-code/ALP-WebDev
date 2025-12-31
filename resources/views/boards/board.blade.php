@@ -1,7 +1,6 @@
 @extends('layouts.nav')
 @section('title', $board->board_name ?? 'You are not part of this board')
 @section('mainContent')
-@if ($board)
     <div class="board-layout d-flex flex-row">
 
         {{-- Sidebar --}}
@@ -30,11 +29,4 @@
         </div>
 
     </div>
-@else
-    <div class="d-flex flex-colum align-items-center justify-content-center" style="min-height: 60vh">
-        <h3 class="mb-3 fw-bold fs-4">You are not part of this board</h3>
-        <p>You have no access to do something in this board</p>
-        <a href="/dashboard" class="btn btn-primary">Return</a>
-    </div>
-@endif
 @endsection
