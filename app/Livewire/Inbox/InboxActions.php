@@ -78,7 +78,7 @@ class InboxActions extends Component
 
         $this->removeInbox($inboxId);
 
-        broadcast(new CardActions($listId));
+        broadcast(new CardActions($this->boardId));
     }
 
     public function removeInbox(string $inboxId) {

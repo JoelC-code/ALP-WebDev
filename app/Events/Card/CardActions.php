@@ -16,18 +16,18 @@ class CardActions implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public int $listId;
+    public int $boardId;
 
-    public function __construct($listId)
+    public function __construct($boardId)
     {
-        $this->listId = $listId;
+        $this->boardId = $boardId;
     }
 
     //Broadcast ini mirip mirip nama yang akan dipakai di app.js
     //(but after this, go to the Livewire [controller])
     public function broadcastOn()
     {
-        return new PrivateChannel('list.' . $this->listId);
+        return new PrivateChannel('board.' . $this->boardId);
     }
 
     public function broadcastAs()

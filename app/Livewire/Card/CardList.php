@@ -30,8 +30,7 @@ class CardList extends Component
 
 
     protected $listeners = [
-        'card-deleted' => 'refreshCards',
-        'card-created' => 'refreshCards',
+        'card-inside-refresh' => 'refreshSelectedCard',
         'hideCreateFormCard' => 'createCancel',
         'cards-reordered' => 'reorderCards',
         'card-refreshed' => 'refreshCards',
@@ -89,6 +88,15 @@ class CardList extends Component
         $this->refreshCards();
     }
 
+    public function refreshSelectedCard() {
+        if(! $this->selectedCard) return;
+
+        $this->selectedCard = Card::with('list.board', 'comments', 'customFields')->find($this->selectedCard->id);
+
+        $this->cardTitle = $this->selectedCard->card_title;
+        $this->cardDescription = $this->selectedCard->description;
+    }
+
     public function showForm()
     {
         $this->showCreateCardForm = true;
@@ -106,10 +114,20 @@ class CardList extends Component
         $this->editMode = false;
         $this->cardTitle = $this->selectedCard->card_title;
         $this->cardDescription = $this->selectedCard->description;
+
+        logger('The card id opened is '. $cardId);
+
+        $this->dispatch('card-entering', cardId: $cardId);
     }
 
     public function closeCard()
     {
+        if($this->selectedCard) {
+            $this->dispatch('card-leaving');
+        }
+
+         logger('The card id closed is '. $this->selectedCard->id);
+         
         $this->showCardModal = false;
         $this->selectedCard = null;
         $this->editMode = false;
@@ -134,7 +152,7 @@ class CardList extends Component
             'details'       => 'Deleted card: "' . $cardTitle . '"',
         ]);
 
-        broadcast(new CardActions($this->selectedCard->list_id));
+        broadcast(new CardActions($boardId));
 
         if (! $cardId) $this->closeCard();
 
@@ -157,7 +175,7 @@ class CardList extends Component
                 'details'       => 'Changed card title: "' . $oldTitle . '" → "' . $this->cardTitle . '"',
             ]);
 
-            broadcast(new CardActions($this->selectedCard->list_id));
+            broadcast(new CardActions($this->selectedCard->list->board->id));
         }
         $this->editingTitle = !$this->editingTitle;
     }
@@ -177,7 +195,7 @@ class CardList extends Component
                 'details'       => 'Description has been updated for ' . $this->selectedCard->cardTitle,
             ]);
 
-            broadcast(new CardActions($this->selectedCard->list_id));
+            broadcast(new CardActions($this->selectedCard->list->board->id));
         }
         $this->editingDescription = !$this->editingDescription;
     }

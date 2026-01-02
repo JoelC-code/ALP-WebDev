@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Comment;
 
+use App\Events\comment\CommentActions;
 use App\Models\Card;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -15,7 +17,7 @@ class CommentView extends Component
     public $editingCommentContent = '';
 
     protected $listeners = [
-        'comment-created' => 'refreshComments',
+        'comment-action' => 'refreshComments',
     ];
 
     public function mount(Card $card)
@@ -35,47 +37,57 @@ class CommentView extends Component
             'commentContent' => 'required|string|min:1',
         ]);
 
-        $this->card->comments()->create([
+        $commentNew = $this->card->comments()->create([
             'user_id' => Auth::id(),
             'comment_content' => $this->commentContent,
         ]);
 
         $this->commentContent = '';
-        $this->refreshComments();
+        broadcast(new CommentActions($commentNew->card->id));
     }
 
     public function deleteComment($commentId)
-{
-    $comment = $this->card->comments()->find($commentId);
-    
-    if ($comment->user_id !== Auth::id()) {
-        abort(403, 'Unauthorized');
-    }
-    
-    $comment->delete();
-    $this->refreshComments();
-}
+    {
+        $comment = $this->card->comments()->find($commentId);
 
-public function updateComment($commentId, $newContent)
-{
-    $comment = $this->card->comments()->find($commentId);
-    
-    if ($comment->user_id !== Auth::id()) {
-        abort(403, 'Unauthorized');
+        if(! $comment) {
+            abort(404, 'Comment is being called twice, causing it to go delete a non existance comment.');
+        }
+
+        $actorId = Auth::id();
+        $actor = User::findOrFail($actorId);
+        $boardId = $comment->card->list->board_id;
+
+        $isAdmin = $actor->memberBoards()->where('board_id', $boardId)->wherePivot('role', 'admin')->exists();
+
+        if ($comment->user_id !== Auth::id() || ! $isAdmin) {
+            abort(403, 'Unauthorized');
+        }
+
+        $comment->delete();
+        broadcast(new CommentActions($comment->card->id));
     }
-    
-    if (empty($newContent) || strlen($newContent) < 1) {
-        return;
+
+    public function updateComment($commentId, $newContent)
+    {
+        $comment = $this->card->comments()->find($commentId);
+
+        if ($comment->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized');
+        }
+
+        if (empty($newContent) || strlen($newContent) < 1) {
+            return;
+        }
+
+        $comment->comment_content = $newContent;
+        $comment->edited_at = now();
+        $comment->save();
+
+        $this->editingCommentId = null;
+        $this->editingCommentContent = '';
+        broadcast(new CommentActions($comment->card->id));
     }
-    
-    $comment->comment_content = $newContent;
-    $comment->edited_at = now();
-    $comment->save();
-    
-    $this->editingCommentId = null;
-    $this->editingCommentContent = '';
-    $this->refreshComments();
-}
 
     public function render()
     {

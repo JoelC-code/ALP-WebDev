@@ -52,7 +52,7 @@ class CardCreate extends Component
         ]);
 
         $this->reset('card_title');
-        broadcast(new CardActions($this->list_id));
+        broadcast(new CardActions($this->board->id));
         $this->cancelCreateCard();
     }
 

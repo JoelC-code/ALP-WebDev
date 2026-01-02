@@ -50,8 +50,10 @@ function subscribedToBoard(boardId) {
     subscribedBoard.add(boardId);
     // Nanti bakal dibawa kesini hasilnya, terus check web mu habis ini
     window.Echo.private(`board.${window.boardId}`)
-        .listen(".CardCreated", (e) => {
-            Livewire.dispatch("card-created", { card: e.card });
+        .listen(".CardActions", (e) => {
+            console.log("Card Does Something ", e);
+            Livewire.dispatch("card-refreshed", { card: e.card });
+            Livewire.dispatch("card-inside-refresh");
         })
 
         .listen(".CardDeleted", (e) => {
@@ -112,8 +114,9 @@ const userId = document
 const root = document.getElementById("toast-root");
 
 if (userId && window.Echo && root) {
-    window.Echo.private(`user.${userId}`)
-        .listen(".BoardMemberToast", (toast) => {
+    window.Echo.private(`user.${userId}`).listen(
+        ".BoardMemberToast",
+        (toast) => {
             const container = document.querySelector(
                 "#toast-root .toast-container"
             );
@@ -132,17 +135,43 @@ if (userId && window.Echo && root) {
             setTimeout(() => {
                 container.classList.add("hidden");
             }, 5000);
-        });
+        }
+    );
 }
 
-if(window.listIds) {
-    window.listIds.forEach(listId => {
-        window.Echo.private(`list.${listId}`).listen('.CardActions', (e) => {
-            console.log('Card has been done something: ', e)
-            Livewire.dispatch('card-refreshed')
-        })
-    })
-}
+let currentCardChannel = null;
+
+Livewire.on("card-entering", ({ cardId }) => {
+    console.log("Received card id in JS:", cardId);
+
+    if(!cardId) {
+        console.log("The id for card is null ", cardId);
+        return;
+    }
+
+    const channel = `card.${cardId}`;
+
+    if (currentCardChannel === channel) return;
+
+    if (currentCardChannel) {
+        window.Echo.leave(currentCardChannel);
+    }
+
+    currentCardChannel = channel;
+
+    window.Echo.private(`card.${cardId}`).listen(".CommentActions", (e) => {
+        console.log("comment has been made", e);
+        Livewire.dispatch("comment-action");
+        currentCardChannel = null;
+    });
+});
+
+Livewire.on("card-leaving", () => {
+    if (!currentCardChannel) return;
+
+    window.Echo.leave(currentCardChannel);
+    currentCardChannel = null;
+});
 
 document.addEventListener("DOMContentLoaded", () => {
     const btn = document.getElementById("toggleSidebar");

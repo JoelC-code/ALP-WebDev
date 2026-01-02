@@ -22,10 +22,3 @@
             @endif
         </div>
     </div>
-
-    @push('scripts')
-        <script>
-            window.listIds = @json($lists->pluck('id'));
-            console.log('Blade injected listIds:', window.listIds);
-        </script>
-    @endpush

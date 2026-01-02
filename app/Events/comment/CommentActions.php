@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events\comment;
+namespace App\Events\Comment;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -21,11 +21,6 @@ class CommentActions implements ShouldBroadcast
         $this->cardId = $cardId;
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
-     */
     public function broadcastOn()
     {
         return new PrivateChannel('card.' . $this->cardId);
