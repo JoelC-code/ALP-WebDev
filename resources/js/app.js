@@ -165,8 +165,13 @@ Livewire.on("card-entering", ({ cardId }) => {
     currentCardChannel = channel;
 
     window.Echo.private(`card.${cardId}`).listen(".CommentActions", (e) => {
-        console.log("comment has been made", e);
         Livewire.dispatch("comment-action");
+        currentCardChannel = null;
+    })
+    
+    .listen('.CustomFieldCard', (e) => {
+        console.log("Changed, delete or make a new custom field inside a card");
+        Livewire.dispatch("refresh-fields");
         currentCardChannel = null;
     });
 });

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\CustomField;
 
+use App\Events\CustomField\CustomFieldCard;
 use App\Models\Card;
 use Livewire\Component;
 
@@ -13,7 +14,6 @@ class CustomFieldView extends Component
 
     protected $listeners = [
         'refresh-fields' => 'refresh',
-        'refresh-fields-card' => 'refreshListCard',
         'reset-fields' => 'resetEdit',
     ];
 
@@ -26,12 +26,14 @@ class CustomFieldView extends Component
     {
         $card = Card::find($this->cardId);
         $card->customFields()->attach($fieldId, ['value' => '']);
+        broadcast(new CustomFieldCard($card->id));
     }
 
     public function removeField($fieldId)
     {
         $card = Card::find($this->cardId);
         $card->customFields()->detach($fieldId);
+        broadcast(new CustomFieldCard($card->id));
     }
 
     public function startEdit($fieldId)
@@ -50,12 +52,14 @@ class CustomFieldView extends Component
         ]);
         $this->editingFieldId = null;
         $this->editingValue = '';
+        broadcast(new CustomFieldCard($card->id));
     }
 
     public function toggleCheckbox($fieldId, $checked)
     {
         $value = $checked ? 'true' : 'false';
         $this->updateFieldValue($fieldId, $value);
+        broadcast(new CustomFieldCard($this->cardId));
     }
 
     public function resetEdit()
@@ -64,6 +68,11 @@ class CustomFieldView extends Component
         $this->editingValue = '';
     }
 
+    public function cancelEdit() {
+        $this->resetEdit();
+    }
+
+
     public function refresh()
     {
         // Force refresh
@@ -71,7 +80,7 @@ class CustomFieldView extends Component
 
     public function render()
     {
-        $card = Card::with(['customFields' => function($q) {
+        $card = Card::with(['customFields' => function ($q) {
             $q->withPivot('value');
         }, 'list.board.customFields'])->find($this->cardId);
 

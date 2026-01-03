@@ -1,6 +1,6 @@
 <div>
     <div class="custom-fields-section mb-3">
-        <h6 class="mb-2">Custom Fields</h6>
+        <h6 class="mb-2 fw-bold mt-2">Custom Fields</h6>
 
         <!-- Display card's custom fields -->
         <div class="card-fields mb-3">
@@ -14,7 +14,8 @@
                             <div class="d-flex gap-2 mt-2">
                                 @if($field->type === 'select')
                                     <select 
-                                        wire:change="updateFieldValue({{ $field->id }}, $event.target.value)"
+                                        wire:model.defer="editingValue";
+                                        wire:keydown.enter="updateFieldValue({{ $field->id }}, $event.target.value)"
                                         class="form-control form-control-sm"
                                         autofocus
                                     >
@@ -26,7 +27,8 @@
                                 @elseif($field->type === 'number')
                                     <input 
                                         type="number" 
-                                        wire:change="updateFieldValue({{ $field->id }}, $event.target.value)"
+                                        wire:model.defer="editingValue"
+                                        wire:keydown.enter="updateFieldValue({{ $field->id }}, $event.target.value)"
                                         class="form-control form-control-sm"
                                         value="{{ $editingValue }}"
                                         autofocus
@@ -34,7 +36,8 @@
                                 @else
                                     <input 
                                         type="text" 
-                                        wire:change="updateFieldValue({{ $field->id }}, $event.target.value)"
+                                        wire:model.defer="editingValue"
+                                        wire:keydown.enter="updateFieldValue({{ $field->id }}, $event.target.value)"
                                         class="form-control form-control-sm"
                                         value="{{ $editingValue }}"
                                         autofocus
@@ -74,13 +77,14 @@
                             @endif
                         @endif
                     </div>
-                    
+                    @if($editingFieldId !== $field->id)
                     <button 
                         class="btn btn-sm btn-outline-danger"
                         wire:click="removeField({{ $field->id }})"
                     >
                         ✕
                     </button>
+                    @endif
                 </div>
             @empty
                 <p class="text-muted small">No fields added yet</p>
