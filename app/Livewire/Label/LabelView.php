@@ -7,12 +7,15 @@ use Livewire\Component;
 
 class LabelView extends Component
 {
-
     public $board;
     public $labels = [];
+    public string $labelView = 'list'; // 'list' or 'form'
+    public ?int $activeLabelId = null;
+
     protected $listeners = [
-        'label-saved' => 'loadLabels',
-        'label-deleted' => 'loadLabels'
+        'label-saved' => 'backToList',
+        'label-deleted' => 'backToList',
+        'label-setting' => 'loadLabels',
     ];
 
     public function mount($board) {
@@ -22,6 +25,22 @@ class LabelView extends Component
 
     public function loadLabels() {
         $this->labels = $this->board->labels()->get();
+    }
+
+    public function backToList() {
+        $this->labelView = 'list';
+        $this->activeLabelId = null;
+        $this->loadLabels();
+    }
+
+    public function createLabel() {
+        $this->labelView = 'form';
+        $this->activeLabelId = null;
+    }
+
+    public function editLabel($labelId) {
+        $this->labelView = 'form';
+        $this->activeLabelId = $labelId;
     }
 
     public function render()

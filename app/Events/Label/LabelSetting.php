@@ -21,9 +21,11 @@ class LabelSetting implements ShouldBroadcast
         $this->boardId = $boardId;
     }
 
-    public function broadcastOn()
+    public function broadcastOn(): array
     {
-        return new PrivateChannel('board.' . $this->boardId);
+        return [
+            new PrivateChannel('board.' . $this->boardId),
+        ];
     }
 
     public function broadcastAs()

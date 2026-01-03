@@ -17,28 +17,36 @@ class CardTemplate extends Model
         'dates',
         'board_id',
     ];
+    protected $casts = [
+        'dates' => 'datetime',
+    ];
 
     // CustomFields <-> Card Template
-    public function customFields(): BelongsToMany {
-        return $this->belongsToMany(CustomField::class)
-                    ->using(FieldTemplate::class)
-                    ->withPivot('value');
+    public function customFields(): BelongsToMany
+    {
+        return $this->belongsToMany(CustomField::class, 'field_templates', 'card_template_id', 'custom_field_id')
+            ->withPivot('value');
     }
 
-    public function fieldTemplates(): HasMany {
+    public function fieldTemplates(): HasMany
+    {
         return $this->hasMany(FieldTemplate::class);
     }
 
-    public function labels(): HasMany {
-        return $this->hasMany(Label::class);
+    public function labels(): BelongsToMany
+    {
+        return $this->belongsToMany(Label::class, 'label_templates', 'card_template_id', 'label_id')
+            ->withTimestamps();
     }
 
-    public function board(): BelongsTo {
+    public function board(): BelongsTo
+    {
         return $this->BelongsTo(Board::class);
     }
 
     //logs
-    public function logs(): MorphMany {
+    public function logs(): MorphMany
+    {
         return $this->morphMany(Log::class, 'loggable');
     }
 }

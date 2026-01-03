@@ -183,6 +183,10 @@ Livewire.on("card-leaving", () => {
     currentCardChannel = null;
 });
 
+Livewire.on('open-card-from-sidebar', ({ cardId }) => {
+    Livewire.dispatch('open-card-modal', { cardId: cardId });
+});
+
 document.addEventListener("DOMContentLoaded", () => {
     const btn = document.getElementById("toggleSidebar");
     if (!btn) return;

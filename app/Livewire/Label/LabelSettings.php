@@ -2,7 +2,10 @@
 
 namespace App\Livewire\Label;
 
+use App\Events\Label\LabelSetting;
 use App\Models\Label;
+use App\Models\Log;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class LabelSettings extends Component
@@ -10,8 +13,21 @@ class LabelSettings extends Component
     public $title;
     public $board;
     public ?int $labelId = null;
-    public string $labelView = 'list';
-    public $color = "#008cff";
+    public $color = "#3498db";
+
+    // Predefined color options
+    public $colorOptions = [
+        '#e74c3c', // Red
+        '#e67e22', // Orange
+        '#f39c12', // Yellow
+        '#2ecc71', // Green
+        '#3498db', // Blue
+        '#9b59b6', // Purple
+        '#1abc9c', // Teal
+        '#34495e', // Dark Gray
+        '#e91e63', // Pink
+        '#00bcd4', // Cyan
+    ];
 
     public function mount($board, $labelId = null) {
         $this->board = $board;
@@ -21,48 +37,66 @@ class LabelSettings extends Component
     }
 
     public function loadLabel($labelId) {
-        $label = Label::find($labelId);
+        $label = Label::findOrFail($labelId);
+        
+        // Check authorization
+        if ($label->board_id !== $this->board->id) {
+            abort(403, 'Unauthorized access');
+        }
+        
         $this->labelId = $label->id;
         $this->title = $label->title;
         $this->color = $label->color;
     }
 
-    public function resetForm() {
-        $this->labelId = null;
-        $this->title = '';
-        $this->color = "#008cff";
+    public function selectColor($color) {
+        $this->color = $color;
     }
 
-    public function deleteLabel() {
-        if(! $this->labelId) {
-            abort(404, 'Label not found');
-        }
-        $label = Label::find($this->labelId);
-        $label::where('board_id', $this->board->id)
-                ->where('id', $this->labelId)
-                ->delete();
-        $this->dispatch('label-deleted');
-        $this->resetForm();
+    public function cancel() {
+        $this->dispatch('label-saved'); // This will trigger backToList
     }
 
     public function saveData()
     {
-
         $this->validate([
             'title' => 'required|string|max:50',
             'color' => 'required|regex:/^#[0-9a-fA-F]{6}$/',
         ]);
 
-        $label = Label::updateOrCreate([
-            'id' => $this->labelId
-        ], [
-            'title' => $this->title,
-            'color' => $this->color,
+        // Check authorization
+        if ($this->board->members->pluck('id')->doesntContain(Auth::id())) {
+            abort(403, 'Unauthorized access');
+        }
+
+        $isNew = !$this->labelId;
+
+        $label = Label::updateOrCreate(
+            ['id' => $this->labelId],
+            [
+                'title' => $this->title,
+                'color' => $this->color,
+                'board_id' => $this->board->id,
+            ]
+        );
+
+        // Create log
+        Log::create([
             'board_id' => $this->board->id,
+            'user_id' => Auth::id(),
+            'loggable_type' => Label::class,
+            'loggable_id' => $label->id,
+            'details' => $isNew 
+                ? 'Created label: "' . $this->title . '"'
+                : 'Updated label: "' . $this->title . '"',
         ]);
 
+        // Broadcast the change
+        broadcast(new LabelSetting($this->board->id));
+
         $this->dispatch('label-saved');
-        $this->resetForm();
+        
+        session()->flash('message', $isNew ? 'Label created successfully' : 'Label updated successfully');
     }
 
     public function render()
