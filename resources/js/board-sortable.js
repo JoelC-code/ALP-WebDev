@@ -23,8 +23,6 @@ export function initListSortable(boardId) {
                 )
             ).map((el) => el.dataset.listId);
 
-            console.log('List changes ID: ', orderedIds)
-
             Livewire.dispatch("lists-reordered", {
                 boardId,
                 orderedIds,

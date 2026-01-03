@@ -63,8 +63,6 @@ export function initCardSortable(boardId) {
                     )
                 ).map((el) => el.dataset.cardId);
 
-                console.log('Card is moved: ', orderedIds)
-
                 Livewire.dispatch("cards-reordered", {
                     cardId,
                     fromListId,
@@ -78,7 +76,6 @@ export function initCardSortable(boardId) {
 
 function listenToList(listId) {
     window.Echo.private(`list.${listId}`).listen(".CardReordered", (e) => {
-        console.log("Card has been moved: ", e);
         Livewire.dispatch("card-ordered");
     });
 }

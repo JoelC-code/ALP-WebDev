@@ -1,5 +1,3 @@
-console.log("🔥 app.js loaded");
-
 import "../css/app.css";
 import "./bootstrap";
 import { initListSortable } from "./board-sortable";
@@ -20,6 +18,9 @@ Livewire.hook("message.processed", () => {
 window.Echo.channel("boards")
     .listen("BoardDeleted", (e) => {
         Livewire.dispatch("board_deleted", { id: e.boardId });
+        if (window.boardId && Number(window.boardId) === Number(e.boardId)) {
+            window.location.reload();
+        }
     })
     .listen(".BoardRenamed", (e) => {
         Livewire.dispatch("global-board-renamed", { board: e.board });
@@ -51,7 +52,6 @@ function subscribedToBoard(boardId) {
     // Nanti bakal dibawa kesini hasilnya, terus check web mu habis ini
     window.Echo.private(`board.${window.boardId}`)
         .listen(".CardActions", (e) => {
-            console.log("Card Does Something ", e);
             Livewire.dispatch("card-refreshed", { card: e.card });
             Livewire.dispatch("card-inside-refresh");
         })
@@ -99,18 +99,20 @@ function subscribedToBoard(boardId) {
         })
 
         .listen(".BoardMemberActions", (e) => {
-            console.log(
-                "member action event received & exited to previous menu",
-                e
-            );
             Livewire.dispatch("member_action", { member: e.member });
             Livewire.dispatch("member_action_done");
+
+            if (
+                e.member?.id ===
+                Number(document.querySelector('meta[name="user-id"]')?.content)
+            ) {
+                window.location.reload();
+            }
         })
 
         .listen(".CustomFieldBoard", (e) => {
-            console.log("Testing for the board's update on the custom fields ", e)
-            Livewire.dispatch('field-updated');
-        })
+            Livewire.dispatch("field-updated");
+        });
 }
 
 const userId = document
@@ -126,16 +128,12 @@ if (userId && window.Echo && root) {
                 "#toast-root .toast-container"
             );
             const el = document.querySelector(".sb-toast");
-            console.log("TOAST RECEIVED: ", toast);
 
             el.textContent = toast.message;
-            console.log(el.textContent);
 
             el.className = `sb-toast sb-toast-${toast.type}`;
-            console.log("Adding class to the toast");
 
             container.classList.remove("hidden");
-            console.log("Toast should be shown now");
 
             setTimeout(() => {
                 container.classList.add("hidden");
@@ -147,10 +145,8 @@ if (userId && window.Echo && root) {
 let currentCardChannel = null;
 
 Livewire.on("card-entering", ({ cardId }) => {
-    console.log("Received card id in JS:", cardId);
 
-    if(!cardId) {
-        console.log("The id for card is null ", cardId);
+    if (!cardId) {
         return;
     }
 
@@ -164,16 +160,16 @@ Livewire.on("card-entering", ({ cardId }) => {
 
     currentCardChannel = channel;
 
-    window.Echo.private(`card.${cardId}`).listen(".CommentActions", (e) => {
-        Livewire.dispatch("comment-action");
-        currentCardChannel = null;
-    })
-    
-    .listen('.CustomFieldCard', (e) => {
-        console.log("Changed, delete or make a new custom field inside a card");
-        Livewire.dispatch("refresh-fields");
-        currentCardChannel = null;
-    });
+    window.Echo.private(`card.${cardId}`)
+        .listen(".CommentActions", (e) => {
+            Livewire.dispatch("comment-action");
+            currentCardChannel = null;
+        })
+
+        .listen(".CustomFieldCard", (e) => {
+            Livewire.dispatch("refresh-fields");
+            currentCardChannel = null;
+        });
 });
 
 Livewire.on("card-leaving", () => {
@@ -183,8 +179,8 @@ Livewire.on("card-leaving", () => {
     currentCardChannel = null;
 });
 
-Livewire.on('open-card-from-sidebar', ({ cardId }) => {
-    Livewire.dispatch('open-card-modal', { cardId: cardId });
+Livewire.on("open-card-from-sidebar", ({ cardId }) => {
+    Livewire.dispatch("open-card-modal", { cardId: cardId });
 });
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -219,7 +215,9 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.classList.toggle("right-sidebar-collapsed");
         localStorage.setItem(
             key,
-            document.body.classList.contains("right-sidebar-collapsed") ? "1" : "0"
+            document.body.classList.contains("right-sidebar-collapsed")
+                ? "1"
+                : "0"
         );
     });
 });
