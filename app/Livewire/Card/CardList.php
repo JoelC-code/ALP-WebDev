@@ -139,8 +139,6 @@ class CardList extends Component
             $this->dispatch('card-leaving');
         }
 
-        logger('The card id closed is ' . $this->selectedCard->id);
-
         $this->showCardModal = false;
         $this->selectedCard = null;
         $this->editMode = false;

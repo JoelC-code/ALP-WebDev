@@ -86,9 +86,6 @@
                                 style="background-color: {{ $label->color }}; color: white; border: 2px solid;"
                                 wire:click="selectLabel({{ $label->id }})">
                                 {{ $label->title }}
-                                @if ($selectedLabel === $label->id)
-                                    <span class="material-symbols-rounded font-logo">check</span>
-                                @endif
                             </button>
                         @endforeach
                     </div>

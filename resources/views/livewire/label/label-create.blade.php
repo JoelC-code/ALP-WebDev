@@ -72,14 +72,19 @@
 
             <!-- Action Buttons -->
             <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-primary d-flex align-items-center gap-1" wire:loading.attr="disabled">
-                    <span wire:loading.remove wire:target="saveData" class="d-flex align-items-center gap-1">
-                        <span class="material-symbols-rounded font-logo">save</span>
-                        <span>{{ $labelId ? 'Update' : 'Create' }}</span>
+                <button type="submit" class="btn btn-primary d-flex align-items-center gap-1"
+                    wire:loading.attr="disabled">
+                    <span wire:loading.remove wire:target="saveData">
+                        <span class="d-flex align-items-center gap-1">
+                            <span class="material-symbols-rounded font-logo">save</span>
+                            <span>{{ $labelId ? 'Update' : 'Create' }}</span>
+                        </span>
                     </span>
-                    <span wire:loading wire:target="saveData" class="d-flex align-items-center gap-1">
-                        <span class="material-symbols-rounded font-logo icon-spin">progress_activity</span>
-                        <span>Saving...</span>
+                    <span wire:loading wire:target="saveData">
+                        <span class="d-flex align-items-center gap-1">
+                            <span class="material-symbols-rounded font-logo icon-spin">progress_activity</span>
+                            <span>Saving...</span>
+                        </span>
                     </span>
                 </button>
                 <button type="button" class="btn btn-secondary" wire:click="cancel">
