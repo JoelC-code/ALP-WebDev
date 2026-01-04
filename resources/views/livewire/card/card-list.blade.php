@@ -305,12 +305,7 @@
                         </div>
 
                         <hr>
-
-                        <!-- Label Section -->
-                        <div class="mb-3">
-                            <livewire:label.label-card :card="$selectedCard" :key="'label-card-' . $selectedCard->id" />
-                        </div>
-
+                        
                         <!-- Description Section -->
                         <div class="mb-3">
                             <label class="form-label"><strong>Description</strong></label>
