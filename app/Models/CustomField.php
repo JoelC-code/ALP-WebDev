@@ -21,7 +21,6 @@ class CustomField extends Model
         'options' => 'array'
     ];
 
-    // Default options for select type
     public static function getDefaultOptions(): array
     {
         return [
@@ -31,7 +30,6 @@ class CustomField extends Model
         ];
     }
 
-    // Get options with defaults merged
     public function getSelectOptions(): array
     {
         if ($this->type !== 'select') {
@@ -41,30 +39,29 @@ class CustomField extends Model
         return $this->options ?? self::getDefaultOptions();
     }
 
-    // Pivot Cards <-> Custom Fields
     public function cards(): BelongsToMany
     {
         return $this->belongsToMany(Card::class, 'field_cards')
-                    ->using(FieldCard::class)
-                    ->withPivot('value');
+            ->using(FieldCard::class)
+            ->withPivot('value');
     }
 
     public function fieldCards(): HasMany
     {
-        return $this->hasMany(FieldCard::class);
+        return $this->hasMany(FieldCard::class, 'custom_field_id');
     }
 
-    // Pivot CardTemplate <-> Custom Fields
     public function cardTemplates(): BelongsToMany
     {
         return $this->belongsToMany(CardTemplate::class, 'field_templates')
-                    ->using(FieldTemplate::class)
-                    ->withPivot('value');
+            ->using(FieldTemplate::class)
+            ->withPivot('value');
     }
 
-    public function fieldTemplate(): HasMany
+    // FIX: Specify the correct table name
+    public function fieldTemplates(): HasMany
     {
-        return $this->hasMany(FieldTemplate::class);
+        return $this->hasMany(FieldTemplate::class, 'custom_field_id');
     }
 
     public function board(): BelongsTo
@@ -72,27 +69,31 @@ class CustomField extends Model
         return $this->belongsTo(Board::class);
     }
 
-    // Logs
     public function logs(): MorphMany
     {
         return $this->morphMany(Log::class, 'loggable');
     }
 
-    // Boot method to handle type changes
     protected static function boot()
     {
         parent::boot();
 
         static::updating(function ($field) {
-            // If type is changing, delete all field values
             if ($field->isDirty('type')) {
+                // These will now use the correct table names
                 $field->fieldCards()->delete();
-                
-                // If changing to select type, set default options
+                $field->fieldTemplates()->delete();
+
                 if ($field->type === 'select' && empty($field->options)) {
                     $field->options = self::getDefaultOptions();
                 }
             }
+        });
+
+        static::deleting(function ($field) {
+            // These will now use the correct table names
+            $field->fieldCards()->delete();
+            $field->fieldTemplates()->delete();
         });
     }
 }

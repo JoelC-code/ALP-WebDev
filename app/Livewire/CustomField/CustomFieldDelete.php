@@ -21,7 +21,6 @@ class CustomFieldDelete extends Component
 
     public function deleteField()
     {
-        // Check if user is board member
         $pivot = $this->board->members()->where('user_id', Auth::id())->first()?->pivot;
         if (!$pivot) {
             abort(403, 'Unauthorized');
@@ -29,18 +28,26 @@ class CustomFieldDelete extends Component
 
         $customFieldName = $this->field->title;
         $customFieldId = $this->field->id;
+        $boardId = $this->board->id;
 
+        // Delete the field
         $this->field->delete();
 
         Log::create([
-            'board_id' => $this->board->id,
+            'board_id' => $boardId,
             'user_id' => Auth::id(),
             'loggable_type' => CustomField::class,
             'loggable_id' => $customFieldId,
             'details' => 'Deleted custom field "' . $customFieldName . '"',
         ]);
 
-        broadcast(new CustomFieldBoard($this->board->id));
+        // Dispatch to parent to remove this component from DOM
+        $this->dispatch('field-deleted', fieldId: $customFieldId);
+        
+        // Then broadcast to others
+        broadcast(new CustomFieldBoard($boardId))->toOthers();
+        
+        session()->flash('message', 'Field deleted successfully');
     }
 
     public function render()

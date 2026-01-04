@@ -20,10 +20,11 @@ class CustomFieldEdit extends Component
     public $editingOptionIndex = null;
     public $editingOptionLabel = '';
 
-    // Store original state for cancel
     public $originalFieldTitle;
     public $originalFieldType;
     public $originalOptions = [];
+    
+    public $fieldDeleted = false;
 
     protected $listeners = [
         'field-updated' => 'refresh',
@@ -31,22 +32,16 @@ class CustomFieldEdit extends Component
 
     public function mount(CustomField $field)
     {
+        if (!$field->exists) {
+            return;
+        }
+        
         $this->field = $field;
         $this->board = $field->board;
         $this->fieldTitle = $field->title;
         $this->fieldType = $field->type;
         $this->loadOptions();
         $this->saveOriginalState();
-    }
-
-    public function hydrate()
-    {
-        if (!$this->field || !$this->field->exists) {
-            return;
-        }
-
-        $this->fieldTitle = $this->field->title;
-        $this->fieldType = $this->field->type;
     }
 
     public function saveOriginalState()
@@ -67,8 +62,11 @@ class CustomFieldEdit extends Component
 
     public function toggleEditMode()
     {
+        if ($this->fieldDeleted) {
+            return;
+        }
+
         if ($this->editMode) {
-            // Canceling - restore original state
             $this->fieldTitle = $this->originalFieldTitle;
             $this->fieldType = $this->originalFieldType;
             $this->customOptions = $this->originalOptions;
@@ -76,7 +74,6 @@ class CustomFieldEdit extends Component
             $this->editingOptionIndex = null;
             $this->editingOptionLabel = '';
         } else {
-            // Starting edit - save current state
             $this->saveOriginalState();
             $this->loadOptions();
         }
@@ -142,6 +139,11 @@ class CustomFieldEdit extends Component
 
     public function updateField()
     {
+        if ($this->fieldDeleted || !$this->field->exists) {
+            session()->flash('error', 'Field no longer exists');
+            return;
+        }
+
         $pivot = $this->board->members()->where('user_id', Auth::id())->first()?->pivot;
         if (!$pivot) {
             abort(403, 'Unauthorized');
@@ -157,7 +159,6 @@ class CustomFieldEdit extends Component
             'type' => $this->fieldType,
         ];
 
-        // Add options if type is select
         if ($this->fieldType === 'select') {
             $data['options'] = $this->customOptions;
         } else {
@@ -183,15 +184,36 @@ class CustomFieldEdit extends Component
 
     public function refresh()
     {
-        $this->field->refresh();
-        $this->fieldTitle = $this->field->title;
-        $this->fieldType = $this->field->type;
-        $this->loadOptions();
-        $this->saveOriginalState();
+        try {
+            $field = CustomField::find($this->field->id);
+            
+            if (!$field) {
+                $this->fieldDeleted = true;
+                return;
+            }
+            
+            $this->field = $field;
+            
+            // Only update if NOT in edit mode
+            if (!$this->editMode) {
+                $this->fieldTitle = $this->field->title;
+                $this->fieldType = $this->field->type;
+                $this->loadOptions();
+                $this->saveOriginalState();
+            }
+        } catch (\Exception $e) {
+            $this->fieldDeleted = true;
+        }
     }
 
     public function render()
     {
+        if ($this->fieldDeleted || !$this->field || !$this->field->exists) {
+            return <<<'HTML'
+            <div style="display: none;"></div>
+            HTML;
+        }
+
         return view('livewire.custom-field.custom-field-edit');
     }
 }

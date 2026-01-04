@@ -1,7 +1,5 @@
 <?php
 
-//CUSTOM PIVOT TABLE
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,6 +7,9 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class FieldCard extends Pivot
 {
+    protected $table = 'field_cards'; 
+    
+    public $incrementing = true;
     
     protected $fillable = [
         'custom_field_id',
@@ -20,7 +21,7 @@ class FieldCard extends Pivot
         return $this->belongsTo(CustomField::class);
     }
 
-    public function cards(): BelongsTo  {
+    public function cards(): BelongsTo {
         return $this->belongsTo(Card::class);
     }
 }
