@@ -6,7 +6,7 @@
     </button>
 
     <!-- Modal -->
-    @if($showModal)
+    @if ($showModal)
         <div class="modal d-block" style="background-color: rgba(0,0,0,0.5);" wire:click="closeModal">
             <div class="modal-dialog" wire:click.stop>
                 <div class="modal-content">
@@ -22,11 +22,10 @@
                         <form wire:submit.prevent="createCardFromTemplate">
                             <div class="mb-3">
                                 <label class="form-label">Select List <span class="text-danger">*</span></label>
-                                <select 
-                                    class="form-select @error('selectedListId') is-invalid @enderror" 
+                                <select class="form-select @error('selectedListId') is-invalid @enderror"
                                     wire:model="selectedListId">
                                     <option value="">-- Choose a list --</option>
-                                    @foreach($lists as $list)
+                                    @foreach ($lists as $list)
                                         <option value="{{ $list->id }}">{{ $list->list_name }}</option>
                                     @endforeach
                                 </select>
@@ -42,26 +41,30 @@
                                     <h6 class="card-title mb-2">Card Preview:</h6>
                                     <ul class="list-unstyled mb-0">
                                         <li><strong>Title:</strong> {{ $template->card_title }}</li>
-                                        @if($template->description)
-                                            <li><strong>Description:</strong> {{ Str::limit($template->description, 50) }}</li>
+                                        @if ($template->description)
+                                            <li><strong>Description:</strong>
+                                                {{ Str::limit($template->description, 50) }}</li>
                                         @endif
-                                        @if($template->dates)
-                                            <li><strong>Due Date:</strong> {{ \Carbon\Carbon::parse($template->dates)->format('M d, Y') }}</li>
+                                        @if ($template->dates)
+                                            <li><strong>Due Date:</strong>
+                                                {{ \Carbon\Carbon::parse($template->dates)->format('M d, Y') }}</li>
                                         @endif
-                                        @if($template->labels->count() > 0)
+                                        @if ($template->labels->count() > 0)
                                             <li>
                                                 <strong>Labels:</strong>
-                                                @foreach($template->labels as $label)
-                                                    <span class="badge me-1" style="background-color: {{ $label->color }};">
+                                                @foreach ($template->labels as $label)
+                                                    <span class="badge me-1"
+                                                        style="background-color: {{ $label->color }};">
                                                         {{ $label->title }}
                                                     </span>
                                                 @endforeach
                                             </li>
                                         @endif
-                                        @if($template->customFields->count() > 0)
-                                            <li><strong>Custom Fields:</strong> {{ $template->customFields->count() }} field(s) with values</li>
+                                        @if ($template->customFields->count() > 0)
+                                            <li><strong>Custom Fields:</strong> {{ $template->customFields->count() }}
+                                                field(s) with values</li>
                                         @endif
-                                        @if($template->image)
+                                        @if ($template->image)
                                             <li><strong>Image:</strong> ✓ Included</li>
                                         @endif
                                     </ul>
@@ -73,19 +76,20 @@
                         <button type="button" class="btn btn-secondary" wire:click="closeModal">
                             Cancel
                         </button>
-                        <button 
-                            type="button" 
-                            class="btn btn-primary d-flex align-items-center gap-1" 
-                            wire:click="createCardFromTemplate"
-                            wire:loading.attr="disabled"
+                        <button type="button" class="btn btn-primary d-flex align-items-center gap-1"
+                            wire:click="createCardFromTemplate" wire:loading.attr="disabled"
                             wire:target="createCardFromTemplate">
-                            <span wire:loading.remove wire:target="createCardFromTemplate" class="d-flex align-items-center gap-1">
-                                <span class="material-symbols-rounded font-logo">add_circle</span>
-                                <span>Create Card</span>
+                            <span wire:loading.remove wire:target="createCardFromTemplate">
+                                <span class="d-flex align-items-center gap-1">
+                                    <span class="material-symbols-rounded font-logo">add_circle</span>
+                                    <span>Create Card</span>
+                                </span>
                             </span>
-                            <span wire:loading wire:target="createCardFromTemplate" class="d-flex align-items-center gap-1">
-                                <span class="material-symbols-rounded font-logo icon-spin">progress_activity</span>
-                                <span>Creating...</span>
+                            <span wire:loading wire:target="createCardFromTemplate">
+                                <span class="d-flex align-items-center gap-1">
+                                    <span class="material-symbols-rounded font-logo icon-spin">progress_activity</span>
+                                    <span>Creating...</span>
+                                </span>
                             </span>
                         </button>
                     </div>
