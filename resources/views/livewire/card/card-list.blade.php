@@ -149,16 +149,18 @@
                                             wire:click="uploadImage" wire:loading.attr="disabled"
                                             wire:target="newImage, uploadImage"
                                             @if (!$newImage) disabled @endif>
-                                            <span wire:loading.remove wire:target="uploadImage"
-                                                class="d-flex align-items-center gap-1">
-                                                <span class="material-symbols-rounded font-logo">upload</span>
-                                                <span>Upload</span>
+                                            <span wire:loading.remove wire:target="uploadImage">
+                                                <span class="d-flex align-items-center gap-1">
+                                                    <span class="material-symbols-rounded font-logo">upload</span>
+                                                    <span>Upload</span>
+                                                </span>
                                             </span>
-                                            <span wire:loading wire:target="uploadImage"
-                                                class="d-flex align-items-center gap-1">
-                                                <span
-                                                    class="material-symbols-rounded font-logo icon-spin">progress_activity</span>
-                                                <span>Uploading...</span>
+                                            <span wire:loading wire:target="uploadImage">
+                                                <span class="d-flex align-items-center gap-1">
+                                                    <span
+                                                        class="material-symbols-rounded font-logo icon-spin">progress_activity</span>
+                                                    <span>Uploading...</span>
+                                                </span>
                                             </span>
                                         </button>
                                         <button type="button" class="btn btn-secondary btn-sm"
@@ -238,13 +240,13 @@
                         <hr>
 
                         <!-- Label Section -->
-                        <div class="mb-3">
+                        <div class="mb-3 mt-2">
                             <livewire:label.label-card :card="$selectedCard" :key="'label-card-' . $selectedCard->id" />
                         </div>
 
                         <hr>
 
-                        <div class="mb-3">
+                        <div class="mb-3 mt-2">
                             <label class="form-label d-flex align-items-center gap-1">
                                 <span class="material-symbols-rounded font-logo">schedule</span>
                                 <strong class="mb-0">Due Date</strong>
@@ -338,10 +340,14 @@
 
                         <hr>
                         
-                        <livewire:custom-field.custom-field-view :card="$selectedCard" :key="'custom-field-' . $selectedCard->id . '-' . now()->timestamp" />
+                        <div class="mt-2 mb-2">
+                            <livewire:custom-field.custom-field-view :card="$selectedCard" :key="'custom-field-' . $selectedCard->id . '-' . now()->timestamp" />
+                        </div>
 
                         <hr>
-                        <livewire:comment.comment-view :card="$selectedCard" :key="'comment-' . $selectedCard->id" />
+                        <div class="mt-2 mb-2">
+                            <livewire:comment.comment-view :card="$selectedCard" :key="'comment-' . $selectedCard->id" />
+                        </div>
                     </div>
 
                     <div class="modal-footer">
