@@ -75,7 +75,7 @@ function subscribedToBoard(boardId) {
                 template: e.template 
             });
         })
-        
+
         .listen(".BoardRenamed", (e) => {
             Livewire.dispatch("board-renamed", { board: e.board });
         })
@@ -118,12 +118,13 @@ function subscribedToBoard(boardId) {
 
         .listen(".CustomFieldBoard", (e) => {
             Livewire.dispatch("field-updated");
+            Livewire.dispatch("refresh-fields");
         })
 
         .listen(".CardTemplateUpdated", (e) => {
             console.log("Card template has been changed ",e);
             Livewire.dispatch('template-saved');
-        }) 
+        });
 }
 
 const userId = document

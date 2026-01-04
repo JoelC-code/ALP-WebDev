@@ -12,6 +12,7 @@ class CustomFieldList extends Component
 
     protected $listeners = [
         'field-updated' => 'loadFields',
+        'field-deleted' => 'loadFields',
     ];
 
     public function mount(Board $board)
@@ -22,7 +23,7 @@ class CustomFieldList extends Component
 
     public function loadFields()
     {
-        $this->fields = $this->board->customFields;
+        $this->fields = $this->board->customFields()->get();
     }
 
     public function render()

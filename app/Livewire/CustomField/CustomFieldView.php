@@ -5,6 +5,7 @@ namespace App\Livewire\CustomField;
 use App\Events\CustomField\CustomFieldCard;
 use App\Models\Card;
 use Livewire\Component;
+use Illuminate\Support\Facades\Log;
 
 class CustomFieldView extends Component
 {
@@ -13,8 +14,9 @@ class CustomFieldView extends Component
     public $editingValue = '';
 
     protected $listeners = [
-        'refresh-fields' => 'refresh',
+        'refresh-fields' => '$refresh',
         'reset-fields' => 'resetEdit',
+        'field-updated' => '$refresh',  // ← ADD THIS to listen for deletions
     ];
 
     public function mount(Card $card)
@@ -24,29 +26,38 @@ class CustomFieldView extends Component
 
     public function addField($fieldId)
     {
-        $card = Card::find($this->cardId);
+        $card = Card::findOrFail($this->cardId);
+        
+        // Check if field still exists before attaching
+        if (!\App\Models\CustomField::find($fieldId)) {
+            $this->dispatch('$refresh');
+            return;
+        }
+        
         $card->customFields()->attach($fieldId, ['value' => '']);
         broadcast(new CustomFieldCard($card->id));
+        $this->dispatch('$refresh');
     }
 
     public function removeField($fieldId)
     {
-        $card = Card::find($this->cardId);
+        $card = Card::findOrFail($this->cardId);
         $card->customFields()->detach($fieldId);
         broadcast(new CustomFieldCard($card->id));
+        $this->dispatch('$refresh');
     }
 
     public function startEdit($fieldId)
     {
         $this->editingFieldId = $fieldId;
-        $card = Card::find($this->cardId);
+        $card = Card::findOrFail($this->cardId);
         $field = $card->customFields()->find($fieldId);
         $this->editingValue = $field?->pivot?->value ?? '';
     }
 
     public function updateFieldValue($fieldId, $value)
     {
-        $card = Card::find($this->cardId);
+        $card = Card::findOrFail($this->cardId);
         $card->customFields()->syncWithoutDetaching([
             $fieldId => ['value' => $value]
         ]);
@@ -59,7 +70,6 @@ class CustomFieldView extends Component
     {
         $value = $checked ? 'true' : 'false';
         $this->updateFieldValue($fieldId, $value);
-        broadcast(new CustomFieldCard($this->cardId));
     }
 
     public function resetEdit()
@@ -68,26 +78,39 @@ class CustomFieldView extends Component
         $this->editingValue = '';
     }
 
-    public function cancelEdit() {
-        $this->resetEdit();
-    }
-
-
-    public function refresh()
+    public function cancelEdit()
     {
-        // Force refresh
+        $this->resetEdit();
     }
 
     public function render()
     {
-        $card = Card::with(['customFields' => function ($q) {
-            $q->withPivot('value');
-        }, 'list.board.customFields'])->find($this->cardId);
+        try {
+            $card = Card::with([
+                'customFields' => function ($q) {
+                    $q->withPivot('value');
+                },
+                'list.board.customFields'
+            ])->findOrFail($this->cardId);
 
-        return view('livewire.custom-field.custom-field-view', [
-            'card' => $card,
-            'cardFields' => $card->customFields,
-            'boardFields' => $card->list->board->customFields,
-        ]);
+            // Filter out any null or deleted fields
+            $boardFields = $card->list->board->customFields->filter(function($field) {
+                return $field && $field->exists;
+            });
+
+            return view('livewire.custom-field.custom-field-view', [
+                'card' => $card,
+                'cardFields' => $card->customFields ?? collect(),
+                'boardFields' => $boardFields,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('CustomFieldView render error: ' . $e->getMessage());
+
+            return view('livewire.custom-field.custom-field-view', [
+                'card' => Card::findOrFail($this->cardId),
+                'cardFields' => collect(),
+                'boardFields' => collect(),
+            ]);
+        }
     }
 }

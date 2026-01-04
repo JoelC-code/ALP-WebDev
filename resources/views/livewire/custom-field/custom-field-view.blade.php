@@ -4,16 +4,21 @@
 
         @foreach($boardFields as $field)
             @php
-                $cardField = $cardFields->firstWhere('id', $field->id);
-                $hasField = $cardField !== null;
-                $value = $hasField ? $cardField->pivot->value : '';
+                try {
+                    $cardField = $cardFields->firstWhere('id', $field->id);
+                    $hasField = $cardField !== null;
+                    $value = $hasField ? $cardField->pivot->value : '';
+                } catch (\Exception $e) {
+                    Log::error('Error processing field ' . $field->id . ': ' . $e->getMessage());
+                    continue; // Skip this field
+                }
             @endphp
 
             <div class="mb-3">
                 <div class="d-flex justify-content-between align-items-center mb-1">
                     <label class="form-label small mb-0">
-                        <strong>{{ $field->title }}</strong>
-                        <span class="text-muted">({{ $field->type }})</span>
+                        <strong>{{ $field->title ?? 'Unknown' }}</strong>
+                        <span class="text-muted">({{ $field->type ?? 'unknown' }})</span>
                     </label>
                     
                     @if(!$hasField)
@@ -41,7 +46,7 @@
                                     type="text" 
                                     class="form-control"
                                     wire:model="editingValue"
-                                    wire:keydown.enter="updateFieldValue({{ $field->id }}, $wire.editingValue)"
+                                    wire:keydown.enter="updateFieldValue({{ $field->id }}, $event.target.value)"
                                 >
                                 <button 
                                     class="btn btn-primary"
@@ -72,7 +77,7 @@
                                     type="number" 
                                     class="form-control"
                                     wire:model="editingValue"
-                                    wire:keydown.enter="updateFieldValue({{ $field->id }}, $wire.editingValue)"
+                                    wire:keydown.enter="updateFieldValue({{ $field->id }}, $event.target.value)"
                                 >
                                 <button 
                                     class="btn btn-primary"
@@ -97,20 +102,33 @@
                         @endif
 
                     @elseif($field->type === 'select')
-                        <select 
-                            class="form-control form-control-sm"
-                            wire:change="updateFieldValue({{ $field->id }}, $event.target.value)"
-                        >
-                            <option value="">-- Select --</option>
-                            @foreach($field->getSelectOptions() as $option)
-                                <option 
-                                    value="{{ $option['value'] }}" 
-                                    {{ $value === $option['value'] ? 'selected' : '' }}
-                                >
-                                    {{ $option['label'] }}
-                                </option>
-                            @endforeach
-                        </select>
+                        @php
+                            try {
+                                $selectOptions = $field->getSelectOptions();
+                            } catch (\Exception $e) {
+                                $selectOptions = [];
+                                Log::error('Error getting select options: ' . $e->getMessage());
+                            }
+                        @endphp
+                        
+                        @if(!empty($selectOptions))
+                            <select 
+                                class="form-control form-control-sm"
+                                wire:change="updateFieldValue({{ $field->id }}, $event.target.value)"
+                            >
+                                <option value="">-- Select --</option>
+                                @foreach($selectOptions as $option)
+                                    <option 
+                                        value="{{ $option['value'] ?? '' }}" 
+                                        {{ $value === ($option['value'] ?? '') ? 'selected' : '' }}
+                                    >
+                                        {{ $option['label'] ?? 'Unknown' }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        @else
+                            <p class="text-muted small">No options available</p>
+                        @endif
 
                     @elseif($field->type === 'checkbox')
                         <div class="form-check">
