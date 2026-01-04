@@ -11,33 +11,41 @@
                         wire:click="openCard({{ $ca->id }})">
                 @endif
 
-                <div class="card-body p-2 d-flex justify-content-between align-items-center">
-                    {{-- Checkbox --}}
-                    <div class="form-check" onclick="event.stopPropagation()">
-                        <input class="form-check-input" type="checkbox" id="card-complete-{{ $ca->id }}"
-                            @if ($ca->is_completed) checked @endif
-                            wire:click="toggleComplete({{ $ca->id }})" style="cursor: pointer;">
+                <div class="card-body p-2">
+                    {{-- Top row: Checkbox and Title --}}
+                    <div class="d-flex align-items-center mb-2">
+                        {{-- Checkbox --}}
+                        <div class="form-check" onclick="event.stopPropagation()">
+                            <input class="form-check-input" type="checkbox" id="card-complete-{{ $ca->id }}"
+                                @if ($ca->is_completed) checked @endif
+                                wire:click="toggleComplete({{ $ca->id }})" style="cursor: pointer;">
+                        </div>
+
+                        {{-- Card Title --}}
+                        <span wire:click="openCard({{ $ca->id }})" class="flex-grow-1 ms-2" style="cursor: pointer;">
+                            {{ $ca->card_title }}
+                        </span>
                     </div>
 
-                    {{-- Card Title --}}
-                    <span wire:click="openCard({{ $ca->id }})" class="flex-grow-1 ms-2" style="cursor: pointer;">
-                        {{ $ca->card_title }}
-                    </span>
+                    {{-- Bottom row: Label and Due Date --}}
+                    @if ($ca->labels->first() || $ca->dates)
+                        <div class="d-flex align-items-center gap-2 ms-4">
+                            {{-- Label Badge --}}
+                            @if ($ca->labels->first())
+                                <span class="badge" style="background-color: {{ $ca->labels->first()->color }};">
+                                    {{ $ca->labels->first()->title }}
+                                </span>
+                            @endif
 
-                    {{-- Label Badge --}}
-                    @if ($ca->labels->first())
-                        <span class="badge me-2" style="background-color: {{ $ca->labels->first()->color }};">
-                            {{ $ca->labels->first()->title }}
-                        </span>
-                    @endif
-
-                    {{-- Due Date Badge (if exists) --}}
-                    @if ($ca->dates)
-                        <span
-                            class="badge d-inline-flex align-items-center gap-1 {{ $ca->isOverdue() ? 'bg-danger' : ($ca->isDueSoon() ? 'bg-warning text-dark' : 'bg-secondary') }} ms-2">
-                            <span class="material-symbols-rounded font-logo">schedule</span>
-                            <span>{{ \Carbon\Carbon::parse($ca->dates)->format('M d') }}</span>
-                        </span>
+                            {{-- Due Date Badge --}}
+                            @if ($ca->dates)
+                                <span
+                                    class="badge d-inline-flex align-items-center gap-1 {{ $ca->isOverdue() ? 'bg-danger' : ($ca->isDueSoon() ? 'bg-warning text-dark' : 'bg-secondary') }}">
+                                    <span class="material-symbols-rounded font-logo" style="font-size: 16px;">schedule</span>
+                                    <span>{{ \Carbon\Carbon::parse($ca->dates)->format('M d') }}</span>
+                                </span>
+                            @endif
+                        </div>
                     @endif
                 </div>
             </div>
