@@ -10,7 +10,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Broadcast;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::get('/dashboard', function () {
