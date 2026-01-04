@@ -14,7 +14,7 @@
 
         <div class="list-group">
             @forelse($logs as $log)
-                <div class="list-group-item d-flex flex-column flex-md-row align-items-start">
+                <div class="list-group-item">
                     <div>
                         <strong>{{ $log->user->name }}</strong> - {{ $log->details }}
                     </div>
