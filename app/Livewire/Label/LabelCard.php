@@ -3,15 +3,19 @@
 namespace App\Livewire\Label;
 
 use App\Events\Card\CardActions;
+use App\Events\LabelCardsAction;
 use App\Models\Card;
 use App\Models\Label;
 use App\Models\Log;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use SebastianBergmann\Environment\Console;
+use Symfony\Component\HttpKernel\Log\Logger;
 
 class LabelCard extends Component
 {
     public $card;
+    public $cardId;
     public $boardId;
     public $availableLabels = [];
     public $selectedLabelId = null;
@@ -25,6 +29,7 @@ class LabelCard extends Component
     public function mount(Card $card)
     {
         $this->card = $card;
+        $this->cardId = $card->id;
         $this->boardId = $card->list->board->id;
         $this->refreshLabels();
         
@@ -49,7 +54,9 @@ class LabelCard extends Component
 
     public function attachLabel($labelId)
     {
+        $cardOpened = Card::find($this->cardId);
         $label = Label::findOrFail($labelId);
+        
         
         // Check authorization
         $board = $this->card->list->board;
@@ -75,15 +82,17 @@ class LabelCard extends Component
 
         // Broadcast the change
         broadcast(new CardActions($board->id));
+        Logger($cardOpened->id);
+        broadcast(new LabelCardsAction(($cardOpened->id)));
 
         $this->showLabelDropdown = false;
-        $this->dispatch('card-inside-refresh');
         
         session()->flash('message', 'Label attached successfully');
     }
 
     public function removeLabel()
     {
+        $cardOpened = Card::find($this->cardId);
         $board = $this->card->list->board;
         
         // Check authorization
@@ -108,8 +117,8 @@ class LabelCard extends Component
 
             // Broadcast the change
             broadcast(new CardActions($board->id));
-
-            $this->dispatch('card-inside-refresh');
+            Logger($cardOpened->id);
+            broadcast(new LabelCardsAction($cardOpened->id));
             
             session()->flash('message', 'Label removed successfully');
         }

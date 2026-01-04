@@ -1,3 +1,4 @@
+console.log("app.js is on")
 import "../css/app.css";
 import "./bootstrap";
 import { initListSortable } from "./board-sortable";
@@ -53,7 +54,6 @@ function subscribedToBoard(boardId) {
     window.Echo.private(`board.${window.boardId}`)
         .listen(".CardActions", (e) => {
             Livewire.dispatch("card-refreshed", { card: e.card });
-            Livewire.dispatch("card-inside-refresh");
         })
 
         .listen(".CardDeleted", (e) => {
@@ -169,7 +169,13 @@ Livewire.on("card-entering", ({ cardId }) => {
         .listen(".CustomFieldCard", (e) => {
             Livewire.dispatch("refresh-fields");
             currentCardChannel = null;
-        });
+        })
+        
+        .listen(".LabelCardsAction", (e) => {
+            console.log("Labels have been changed", e);
+            Livewire.dispatch("label-saved");
+            currentCardChannel = null;
+        })
 });
 
 Livewire.on("card-leaving", () => {

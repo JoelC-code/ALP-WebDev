@@ -99,6 +99,7 @@ class CardList extends Component
 
     public function refreshSelectedCard()
     {
+        logger("This is called");
         if (! $this->selectedCard) return;
 
         $this->selectedCard = Card::with('list.board', 'comments', 'customFields')->find($this->selectedCard->id);
@@ -106,6 +107,7 @@ class CardList extends Component
         $this->cardTitle = $this->selectedCard->card_title;
         $this->cardDescription = $this->selectedCard->description;
         $this->cardImage = $this->selectedCard->image;
+        logger("if this not seen, then the other screen shouldn't");
     }
 
     public function showForm()

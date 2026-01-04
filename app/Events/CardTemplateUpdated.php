@@ -30,7 +30,7 @@ class CardTemplateUpdated implements ShouldBroadcast
 
     public function broadcastAs()
     {
-        return 'card.template.updated';
+        return 'CardTemplateUpdated';
     }
 
     public function broadcastWith()
