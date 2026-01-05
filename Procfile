@@ -1,1 +1,1 @@
-web: php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan migrate --force && php -S 0.0.0.0:$PORT -t public public/index.php
+web: php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate --force && php -S 0.0.0.0:$PORT -t public public/index.php

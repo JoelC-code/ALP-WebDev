@@ -53,6 +53,6 @@ class ListRename extends Component
 
     public function render()
     {
-        return view('livewire.boardlist.list-rename');
+        return view('livewire.board-list.list-rename');
     }
 }
