@@ -10,7 +10,7 @@
             <livewire:board.board-rename :board="$board" :key="'board-renamed-' . $board->id . '-' . $board->updated_at" />
             <livewire:board.board-invite :board="$board" />
             <livewire:board.board-member-list :board="$board" />
-            <livewire:boardlist.list-view :board="$board" />
+            <livewire:board-list.list-view :board="$board" />
             @push('scripts')
                 <script>
                     window.boardId = {{ $board->id }};

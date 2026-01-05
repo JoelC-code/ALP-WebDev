@@ -20,7 +20,7 @@
             {{ $list_name }}
         </h2>
         
-        <livewire:boardlist.list-delete
+        <livewire:board-list.list-delete
             :board-id="$board->id"
             :list-id="$list->id"
             :key="'list-delete-' . $list->id"

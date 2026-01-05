@@ -6,7 +6,7 @@
                     wire:key="list-{{ $li->id }}">
                     <div class="card shadow-sm p-2" style="width: 300px">
                         <div class="card-header d-flex justify-content-between bg-white fw-bold mb-3 w-100">
-                            <livewire:boardlist.list-rename :board="$board" :list="$li" :key="'list-rename-' . $li->id . '-' . $li->updated_at" />
+                            <livewire:board-list.list-rename :board="$board" :list="$li" :key="'list-rename-' . $li->id . '-' . $li->updated_at" />
                         </div>
                         <livewire:card.card-list :list="$li" :key="$li->id" />
                     </div>
@@ -18,7 +18,7 @@
                     <p class="m-0 w-100">+ Add New List</p>
                 </div>
             @else
-                <livewire:boardlist.list-create :board="$board" />
+                <livewire:board-list.list-create :board="$board" />
             @endif
         </div>
     </div>

@@ -63,6 +63,6 @@ class ListCreate extends Component
 
     public function render()
     {
-        return view('livewire.list.list-create');
+        return view('livewire.board-list.list-create');
     }
 }
