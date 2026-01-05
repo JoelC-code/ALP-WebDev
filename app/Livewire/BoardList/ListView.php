@@ -82,6 +82,6 @@ class ListView extends Component
 
     public function render()
     {
-        return view('livewire.list.list-view');
+        return view('livewire.boardlist.list-view');
     }
 }

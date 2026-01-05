@@ -53,6 +53,6 @@ class ListDelete extends Component
 
     public function render()
     {
-        return view('livewire.list.list-delete');
+        return view('livewire.boardlist.list-delete');
     }
 }
