@@ -1,7 +1,7 @@
 <header class="w-100 fixed-top d-flex flex-row justify-content-between align-items-center p-3" style="background-color: #f4f4f4; z-index: 10;">
     @auth
         <a href="/dashboard" class="text-decoration-none d-flex flex-row h-100 align-items-center">
-            <img src="/images/StackBoard.png" width="50" height="50" class="me-2" style="border-radius: 10px" />
+            <img src="{{ asset('Images/StackBoard.png') }}" width="50" height="50" class="me-2" style="border-radius: 10px" />
             <h4 class="fw-bold mb-0 mt-0" style="color: #1800AD">StackBoard</h4>
         </a>
 
