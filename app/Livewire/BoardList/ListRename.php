@@ -38,7 +38,7 @@ class ListRename extends Component
         ]);
 
         Log::create([
-            'board_id' => $this->boardId,
+            'board_id' => $this->board->id,
             'user_id' => Auth::id(),
             'loggable_type' => ListCard::class,
             'loggable_id' => $this->list->id,
